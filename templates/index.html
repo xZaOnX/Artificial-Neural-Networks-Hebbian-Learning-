@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="{{ form.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ ui.title }}</title>
+  <style>
+    :root {
+      --bg-primary: #08111f;
+      --bg-accent: radial-gradient(circle at top, rgba(255, 183, 3, 0.16), transparent 34%);
+      --surface-primary: rgba(10, 22, 37, 0.88);
+      --surface-secondary: #10233a;
+      --surface-tertiary: #173454;
+      --border-primary: #2b4c73;
+      --border-strong: #ffb703;
+      --text-primary: #f8fafc;
+      --text-secondary: #9fb6cf;
+      --text-muted: #6e88a6;
+      --primary: #ffb703;
+      --primary-strong: #fb8500;
+      --danger-surface: rgba(87, 18, 30, 0.5);
+      --danger-border: #d9485f;
+      --danger-text: #fecdd3;
+      --shadow-lg: 0 18px 40px rgba(4, 11, 20, 0.42);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      background:
+        linear-gradient(180deg, rgba(4, 10, 18, 0.98), rgba(7, 17, 31, 1)),
+        var(--bg-accent),
+        var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 40px 0 56px;
+    }
+
+    .hero {
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border: 1px solid rgba(255, 183, 3, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 183, 3, 0.08);
+      color: #ffd166;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 16px 0 12px;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      max-width: 820px;
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .notice {
+      margin-bottom: 20px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--danger-border);
+      background: var(--danger-surface);
+      color: var(--danger-text);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 330px) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface-primary);
+      border: 1px solid rgba(83, 116, 153, 0.24);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(16px);
+    }
+
+    .panel-body {
+      padding: 22px;
+    }
+
+    .panel-heading {
+      margin: 0 0 18px;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+    }
+
+    .form-shell {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .field-label {
+      color: var(--text-primary);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .field-hint,
+    .output-value {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .field-control {
+      width: 100%;
+      margin: 0;
+      border-radius: 14px;
+      border: 1px solid var(--border-primary);
+      background: var(--surface-secondary);
+      color: var(--text-primary);
+      padding: 12px 14px;
+      transition: border-color 150ms ease, box-shadow 150ms ease, opacity 150ms ease, background 150ms ease;
+    }
+
+    .field-control:focus-visible {
+      outline: none;
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 4px rgba(255, 183, 3, 0.18);
+    }
+
+    .field-control:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      background: rgba(16, 35, 58, 0.7);
+    }
+
+    .field.is-error .field-control {
+      border-color: var(--danger-border);
+      background: rgba(87, 18, 30, 0.22);
+    }
+
+    input[type="range"] {
+      padding: 0;
+      accent-color: var(--primary);
+    }
+
+    .submit-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font: inherit;
+      font-weight: 700;
+      color: #09111c;
+      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+      cursor: pointer;
+      transition: transform 150ms ease, opacity 150ms ease, filter 150ms ease;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    .submit-button:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(255, 183, 3, 0.18);
+    }
+
+    .submit-button:disabled {
+      opacity: 0.75;
+      cursor: wait;
+    }
+
+    .submit-button[aria-busy="true"]::after {
+      content: "";
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 2px solid rgba(9, 17, 28, 0.25);
+      border-top-color: #09111c;
+      animation: spin 0.7s linear infinite;
+    }
+
+    .results-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .status-badge.success {
+      background: rgba(16, 185, 129, 0.16);
+      color: #86efac;
+    }
+
+    .status-badge.failure {
+      background: rgba(217, 72, 95, 0.16);
+      color: #fecdd3;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(17, 35, 57, 0.92), rgba(11, 24, 40, 0.92));
+      border: 1px solid rgba(83, 116, 153, 0.22);
+    }
+
+    .metric-label {
+      margin: 0 0 10px;
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .meta-line {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+    }
+
+    .visual-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .visual-card {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: rgba(8, 18, 31, 0.72);
+      border: 1px solid rgba(83, 116, 153, 0.18);
+    }
+
+    .visual-card h3 {
+      margin: 0 0 14px;
+      font-size: 1rem;
+    }
+
+    .visual-card img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+    }
+
+    details {
+      margin-top: 24px;
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 18px 22px;
+      cursor: pointer;
+      list-style: none;
+      font-weight: 700;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .details-body {
+      padding: 0 22px 22px;
+    }
+
+    .details-body p {
+      margin-top: 0;
+      color: var(--text-secondary);
+    }
+
+    .details-body img {
+      width: 100%;
+      display: block;
+      border-radius: 16px;
+      background: rgba(8, 18, 31, 0.72);
+    }
+
+    .empty-state {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(17, 35, 57, 0.92), rgba(11, 24, 40, 0.92));
+      border: 1px solid rgba(83, 116, 153, 0.22);
+    }
+
+    .empty-state p {
+      margin: 0;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: min(100vw - 20px, 100%);
+        padding-top: 24px;
+      }
+
+      .panel-body,
+      summary,
+      .details-body {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="eyebrow">{{ ui.subtitle }}</div>
+      <h1>{{ ui.title }}</h1>
+      <p>{{ ui.description }}</p>
+    </header>
+
+    {% if has_errors %}
+      <div class="notice">{{ ui.parameter_notice }}</div>
+    {% endif %}
+
+    <main class="layout">
+      <section class="panel">
+        <div class="panel-body">
+          <h2 class="panel-heading">{{ ui.controls }}</h2>
+          <form method="get" class="form-shell" data-form novalidate>
+            <input type="hidden" name="run" value="1">
+
+            <label class="field {{ 'is-error' if 'lang' in invalid_fields else '' }}">
+              <span class="field-label">{{ ui.language }}</span>
+              <select name="lang" class="field-control">
+                <option value="en" {% if form.lang == 'en' %}selected{% endif %}>English</option>
+                <option value="tr" {% if form.lang == 'tr' %}selected{% endif %}>Turkce</option>
+              </select>
+            </label>
+
+            <label class="field {{ 'is-error' if 'pattern' in invalid_fields else '' }}">
+              <span class="field-label">{{ ui.pattern }}</span>
+              <select name="pattern" class="field-control">
+                {% for pattern_name in pattern_names %}
+                  <option value="{{ pattern_name }}" {% if form.pattern == pattern_name %}selected{% endif %}>{{ pattern_name }}</option>
+                {% endfor %}
+              </select>
+            </label>
+
+            <div class="field {{ 'is-error' if 'noise_level' in invalid_fields else '' }}">
+              <div class="field-header">
+                <span class="field-label">{{ ui.noise_level }}</span>
+                <output class="output-value" data-output-for="noise_level">{{ '%.2f'|format(form.noise_level) }}</output>
+              </div>
+              <input class="field-control" type="range" name="noise_level" min="0" max="1" step="0.05" value="{{ form.noise_level }}" data-output-target="noise_level">
+              <span class="field-hint">{{ ui.noise_help }}</span>
+            </div>
+
+            <div class="field {{ 'is-error' if 'mask_ratio' in invalid_fields else '' }}">
+              <div class="field-header">
+                <span class="field-label">{{ ui.mask_ratio }}</span>
+                <output class="output-value" data-output-for="mask_ratio">{{ '%.2f'|format(form.mask_ratio) }}</output>
+              </div>
+              <input class="field-control" type="range" name="mask_ratio" min="0" max="1" step="0.05" value="{{ form.mask_ratio }}" data-output-target="mask_ratio">
+              <span class="field-hint">{{ ui.mask_help }}</span>
+            </div>
+
+            <label class="field {{ 'is-error' if 'update_mode' in invalid_fields else '' }}">
+              <span class="field-label">{{ ui.update_mode }}</span>
+              <select name="update_mode" class="field-control">
+                {% for option in mode_options %}
+                  <option value="{{ option.value }}" {% if form.update_mode == option.value %}selected{% endif %}>{{ option.label }}</option>
+                {% endfor %}
+              </select>
+            </label>
+
+            <label class="field {{ 'is-error' if 'steps' in invalid_fields else '' }}">
+              <span class="field-label">{{ ui.max_recall_steps }}</span>
+              <input class="field-control" type="number" name="steps" min="1" max="30" value="{{ form.steps }}">
+            </label>
+
+            <div class="field {{ 'is-error' if 'threshold' in invalid_fields else '' }}">
+              <div class="field-header">
+                <span class="field-label">{{ ui.activation_threshold }}</span>
+                <output class="output-value" data-output-for="threshold">{{ '%.2f'|format(form.threshold) }}</output>
+              </div>
+              <input class="field-control" type="range" name="threshold" min="0" max="1" step="0.05" value="{{ form.threshold }}" data-output-target="threshold">
+            </div>
+
+            <label class="field {{ 'is-error' if 'seed' in invalid_fields else '' }}">
+              <span class="field-label">{{ ui.random_seed }}</span>
+              <input class="field-control" type="number" name="seed" value="{{ form.seed }}">
+            </label>
+
+            <button type="submit" class="submit-button" data-submit-label aria-busy="false">
+              <span>{{ ui.run_recall }}</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-body results-shell">
+          {% if has_results %}
+            <div class="results-header">
+              <h2 class="panel-heading" style="margin: 0;">{{ ui.result }}</h2>
+              <span class="status-badge {{ result.badge_class }}">{{ result.badge_text }}</span>
+            </div>
+
+            <div class="metrics-grid">
+              <article class="metric-card">
+                <p class="metric-label">{{ ui.accuracy }}</p>
+                <p class="metric-value">{{ result.accuracy }}</p>
+              </article>
+              <article class="metric-card">
+                <p class="metric-label">{{ ui.errors }}</p>
+                <p class="metric-value">{{ result.errors }}</p>
+              </article>
+              <article class="metric-card">
+                <p class="metric-label">{{ ui.overlap }}</p>
+                <p class="metric-value">{{ result.overlap }}</p>
+              </article>
+              <article class="metric-card">
+                <p class="metric-label">{{ ui.nearest_pattern }}</p>
+                <p class="metric-value">{{ result.nearest }}</p>
+              </article>
+            </div>
+
+            <p class="meta-line">{{ result.info_line }}</p>
+
+            <div class="visual-grid">
+              <article class="visual-card">
+                <h3>{{ ui.result }}</h3>
+                <img src="{{ result.comparison_image }}" alt="{{ ui.result }}">
+              </article>
+              <article class="visual-card">
+                <h3>{{ ui.recall_trajectory }}</h3>
+                <img src="{{ result.trajectory_image }}" alt="{{ ui.recall_trajectory }}">
+              </article>
+              <article class="visual-card">
+                <h3>{{ ui.overlap_all }}</h3>
+                <img src="{{ result.overlap_image }}" alt="{{ ui.overlap_all }}">
+              </article>
+            </div>
+          {% else %}
+            <div class="empty-state">
+              <h2 class="panel-heading">{{ ui.result }}</h2>
+              <p>{{ ui.description }}</p>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    </main>
+
+    <details class="panel">
+      <summary>{{ ui.view_all_patterns }}</summary>
+      <div class="details-body">
+        <p>{{ gallery_caption }}</p>
+        <img src="{{ gallery_image }}" alt="{{ ui.view_all_patterns }}">
+      </div>
+    </details>
+  </div>
+
+  <script>
+    const outputs = document.querySelectorAll("[data-output-target]");
+    outputs.forEach((input) => {
+      const target = document.querySelector(`[data-output-for="${input.dataset.outputTarget}"]`);
+      const sync = () => {
+        target.textContent = Number(input.value).toFixed(2);
+      };
+      input.addEventListener("input", sync);
+      sync();
+    });
+
+    const form = document.querySelector("[data-form]");
+    const button = document.querySelector("[data-submit-label]");
+    if (form && button) {
+      form.addEventListener("submit", () => {
+        form.querySelectorAll("input, select, button").forEach((element) => {
+          element.disabled = true;
+        });
+        button.setAttribute("aria-busy", "true");
+        button.querySelector("span").textContent = "{{ ui.running }}";
+      });
+    }
+  </script>
+</body>
+</html>

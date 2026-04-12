@@ -31,10 +31,12 @@ TRANSLATIONS = {
         "activation_threshold": "Threshold",
         "random_seed": "Seed",
         "run_recall": "Run Recall",
+        "running": "Running recall...",
         # Stored patterns
         "view_all_patterns": "Stored Patterns",
         "stored_patterns_title": "Stored patterns",
         "pattern_count": "{n} patterns stored in {neurons}-neuron network (capacity ~{cap})",
+        "parameter_notice": "Some values were reset to safe defaults.",
         # Results
         "result": "Recall Result",
         "accuracy": "Accuracy",
@@ -112,10 +114,12 @@ in the weight matrix.
         "activation_threshold": "Esik",
         "random_seed": "Tohum",
         "run_recall": "Hatirla",
+        "running": "Hatirlama calisiyor...",
         # Sakli oruntüler
         "view_all_patterns": "Sakli Oruntuler",
         "stored_patterns_title": "Sakli oruntuler",
         "pattern_count": "{neurons} noronlu agda {n} oruntu sakli (kapasite ~{cap})",
+        "parameter_notice": "Bazi alanlar guvenli varsayilanlara sifirlandi.",
         # Sonuclar
         "result": "Hatirlama Sonucu",
         "accuracy": "Dogruluk",

@@ -1,4 +1,5 @@
-numpy
+Flask
 matplotlib
-streamlit
+numpy
 pytest
+streamlit
