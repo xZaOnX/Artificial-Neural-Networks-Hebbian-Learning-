@@ -94,6 +94,23 @@ The app opens in your browser. Use the sidebar to:
 3. Choose update mode, recall steps, and threshold.
 4. Click **Run recall** to see the result.
 
+## Vercel deployment
+
+This repo now includes a Vercel-compatible Flask entrypoint in `server.py`.
+The original Streamlit interface in `app.py` is still the local-first UI, but
+Vercel uses the Flask app because it supports WSGI-style Python deployments.
+
+```bash
+# Preview the Vercel entrypoint locally
+python -m flask --app server run
+```
+
+Deployment notes:
+
+- `pyproject.toml` points Vercel at `server:app`.
+- `server.py` exports the Flask `app` used by Vercel.
+- `requirements.txt` includes `Flask` alongside the existing scientific stack.
+
 ---
 
 ## Running tests
