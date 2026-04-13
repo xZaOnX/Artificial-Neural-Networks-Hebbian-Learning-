@@ -59,6 +59,14 @@ TRANSLATIONS = {
         "recall_trajectory": "Recall Trajectory",
         "overlap_all": "Overlap with All Patterns",
         "how_it_works": "How It Works",
+        # Custom pattern editor
+        "input_mode": "Input Mode",
+        "stored_pattern": "Stored Pattern",
+        "draw_custom": "Draw Custom",
+        "custom_draw_title": "Draw Your Pattern",
+        "custom_draw_help": "Check cells to activate them. Active = +1 (filled), inactive = −1 (empty). This becomes the network input.",
+        "clear_grid": "Clear",
+        "fill_grid": "Fill All",
         "explanation": r"""
 **Hebbian autoassociative memory** stores patterns as stable attractors
 of a recurrent neural network.
@@ -142,6 +150,14 @@ in the weight matrix.
         "recall_trajectory": "Hatirlama Yorungesi",
         "overlap_all": "Tum Oruntulerle Ortusme",
         "how_it_works": "Nasil Calisiyor?",
+        # Ozel oruntu editoru
+        "input_mode": "Girdi Modu",
+        "stored_pattern": "Sakli Oruntu",
+        "draw_custom": "Ozel Ciz",
+        "custom_draw_title": "Oruntuyu Cizin",
+        "custom_draw_help": "Hucreleri isaretleyerek aktif edin. Aktif = +1 (dolu), pasif = -1 (bos). Bu girdi olarak aga verilir.",
+        "clear_grid": "Temizle",
+        "fill_grid": "Tumunu Doldur",
         "explanation": r"""
 **Hebbian otocagrisimli bellek**, oruntuleri tekrarlayan bir sinir aginin
 kararli cekicileri (attractor) olarak saklar.

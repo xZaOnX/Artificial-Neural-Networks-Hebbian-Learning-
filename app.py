@@ -6,6 +6,7 @@ Run with:
 """
 
 import numpy as np
+import pandas as pd
 import streamlit as st
 
 from patterns import get_all_patterns, get_pattern_matrix, GRID_SIZE
@@ -123,13 +124,22 @@ with st.sidebar:
 
     st.markdown("---")
 
+    # ── Input mode ──
+    mode_opts = [t("stored_pattern", lang), t("draw_custom", lang)]
+    input_mode = st.radio(t("input_mode", lang), mode_opts, horizontal=True)
+
+    st.markdown("---")
+
     # ── Pattern selection ──
     all_patterns = get_all_patterns()
     P, pattern_names = get_pattern_matrix()
     W = build_weight_matrix(P, zero_diagonal=True)
     N = GRID_SIZE * GRID_SIZE
 
-    selected_name = st.selectbox(t("pattern", lang), pattern_names)
+    if input_mode == mode_opts[0]:
+        selected_name = st.selectbox(t("pattern", lang), pattern_names)
+    else:
+        selected_name = "Custom"
 
     st.markdown("---")
 
@@ -168,6 +178,55 @@ st.markdown(f'<div class="hero-subtitle">{t("description", lang)}</div>',
             unsafe_allow_html=True)
 
 # ───────────────────────────────────────────────────────────────────
+# Custom pattern editor
+# ───────────────────────────────────────────────────────────────────
+_GRID_COLS = [str(i) for i in range(GRID_SIZE)]
+custom_pattern = None
+
+if input_mode == mode_opts[1]:
+    st.markdown(f'### {t("custom_draw_title", lang)}')
+    st.caption(t("custom_draw_help", lang))
+
+    if "custom_grid_data" not in st.session_state:
+        st.session_state["custom_grid_data"] = pd.DataFrame(
+            [[False] * GRID_SIZE for _ in range(GRID_SIZE)],
+            columns=_GRID_COLS,
+        )
+
+    btn1, btn2, _ = st.columns([1, 1, 8])
+    if btn1.button(t("clear_grid", lang)):
+        st.session_state["custom_grid_data"] = pd.DataFrame(
+            [[False] * GRID_SIZE for _ in range(GRID_SIZE)],
+            columns=_GRID_COLS,
+        )
+        st.rerun()
+    if btn2.button(t("fill_grid", lang)):
+        st.session_state["custom_grid_data"] = pd.DataFrame(
+            [[True] * GRID_SIZE for _ in range(GRID_SIZE)],
+            columns=_GRID_COLS,
+        )
+        st.rerun()
+
+    edited_grid = st.data_editor(
+        st.session_state["custom_grid_data"],
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            c: st.column_config.CheckboxColumn(c, width="small")
+            for c in _GRID_COLS
+        },
+    )
+    st.session_state["custom_grid_data"] = edited_grid
+
+    custom_pattern = np.array([
+        1.0 if edited_grid.iloc[r, c] else -1.0
+        for r in range(GRID_SIZE)
+        for c in range(GRID_SIZE)
+    ])
+
+    st.markdown('<hr class="soft-divider">', unsafe_allow_html=True)
+
+# ───────────────────────────────────────────────────────────────────
 # Stored patterns gallery
 # ───────────────────────────────────────────────────────────────────
 with st.expander(t("view_all_patterns", lang), expanded=False):
@@ -181,7 +240,10 @@ with st.expander(t("view_all_patterns", lang), expanded=False):
 # ───────────────────────────────────────────────────────────────────
 if run_button:
     rng = np.random.default_rng(int(seed))
-    original = all_patterns[selected_name]
+    if input_mode == mode_opts[0]:
+        original = all_patterns[selected_name]
+    else:
+        original = custom_pattern
     corrupted = corrupt(original, noise_level, mask_ratio, rng)
 
     if update_mode == mode_options[0]:
@@ -200,8 +262,12 @@ if run_button:
     st.markdown('<hr class="soft-divider">', unsafe_allow_html=True)
 
     # ── Result header with badge ────────────────────────────────
-    badge_class = "badge-success" if is_correct else "badge-fail"
-    badge_text = t("success", lang) if is_correct else t("failure", lang)
+    if input_mode == mode_opts[0]:
+        badge_class = "badge-success" if is_correct else "badge-fail"
+        badge_text = t("success", lang) if is_correct else t("failure", lang)
+    else:
+        badge_class = "badge-success"
+        badge_text = f"→ {nearest_name}"
     st.markdown(
         f'### {t("result", lang)} &nbsp;'
         f'<span class="badge {badge_class}">{badge_text}</span>',

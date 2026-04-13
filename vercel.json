@@ -1,17 +1,9 @@
 {
-  "builds": [
-    {
-      "src": "server.py",
-      "use": "@vercel/python",
-      "config": {
-        "includeFiles": ["templates/**"]
-      }
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "functions": {
+    "api/*.py": {
+      "excludeFiles": "{tests/**,templates/**,__pycache__/**,venv/**,.venv/**,server.py,app.py}"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.py"
-    }
-  ]
+  }
 }
