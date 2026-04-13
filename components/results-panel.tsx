@@ -33,9 +33,9 @@ export function ResultsPanel({
         : copy.failure;
 
   return (
-    <section className="panel min-h-[620px]">
+    <section className="panel min-h-0 xl:min-h-[620px]">
       <div className="panel-body flex h-full flex-col gap-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:flex-wrap">
           <div className="space-y-2">
             <p className="section-label">{copy.result}</p>
             <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[rgb(var(--text-primary))]">
@@ -57,7 +57,7 @@ export function ResultsPanel({
         ) : null}
 
         {!result && !isSubmitting && !error ? (
-          <div className="flex flex-1 items-center justify-center rounded-[24px] border border-dashed border-white/10 bg-black/10 px-6 py-16 text-center">
+          <div className="flex flex-1 items-center justify-center rounded-[20px] border border-dashed border-white/10 bg-black/10 px-4 py-10 text-center sm:rounded-[24px] sm:px-6 sm:py-16">
             <p className="max-w-md text-sm leading-7 text-[rgb(var(--text-secondary))]">
               {copy.emptyState}
             </p>
@@ -67,7 +67,7 @@ export function ResultsPanel({
         {isSubmitting ? (
           <div className="space-y-4">
             <div className="skeleton h-[280px] w-full" />
-            <div className="grid gap-4 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
               {Array.from({ length: 4 }).map((_, index) => (
                 <div key={index} className="skeleton h-[96px] w-full" />
               ))}
@@ -78,30 +78,30 @@ export function ResultsPanel({
 
         {result && !isSubmitting ? (
           <div className="space-y-5">
-            <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black/20 p-3">
+            <div className="overflow-hidden rounded-[20px] border border-white/10 bg-black/20 p-2 sm:rounded-[24px] sm:p-3">
               <img
                 alt={copy.result}
                 src={result.images.comparison}
-                className="w-full rounded-[18px] border border-white/5 bg-black/15"
+                className="w-full rounded-[14px] border border-white/5 bg-black/15 sm:rounded-[18px]"
               />
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
               <div className="metric-card">
                 <p className="field-hint">{copy.accuracy}</p>
-                <p className="mt-3 text-2xl font-semibold">{result.metrics.accuracyLabel}</p>
+                <p className="mt-2 text-lg font-semibold sm:mt-3 sm:text-2xl">{result.metrics.accuracyLabel}</p>
               </div>
               <div className="metric-card">
                 <p className="field-hint">{copy.errors}</p>
-                <p className="mt-3 text-2xl font-semibold">{result.metrics.errorsLabel}</p>
+                <p className="mt-2 text-lg font-semibold sm:mt-3 sm:text-2xl">{result.metrics.errorsLabel}</p>
               </div>
               <div className="metric-card">
                 <p className="field-hint">{copy.overlap}</p>
-                <p className="mt-3 text-2xl font-semibold">{result.metrics.overlapLabel}</p>
+                <p className="mt-2 text-lg font-semibold sm:mt-3 sm:text-2xl">{result.metrics.overlapLabel}</p>
               </div>
               <div className="metric-card">
                 <p className="field-hint">{copy.nearestPattern}</p>
-                <p className="mt-3 text-2xl font-semibold">{result.metrics.nearest}</p>
+                <p className="mt-2 text-lg font-semibold sm:mt-3 sm:text-2xl">{result.metrics.nearest}</p>
               </div>
             </div>
 
@@ -110,11 +110,11 @@ export function ResultsPanel({
               {copy.energyLabel(result.summary.energy)}
             </p>
 
-            <div className="rounded-[24px] border border-white/10 bg-black/15 p-3">
-              <div className="mb-4 flex flex-wrap gap-2">
+            <div className="rounded-[20px] border border-white/10 bg-black/15 p-2 sm:rounded-[24px] sm:p-3">
+              <div className="mb-3 grid grid-cols-2 gap-2 sm:mb-4 sm:flex sm:flex-wrap">
                 <button
                   type="button"
-                  className="tab-button"
+                  className="tab-button w-full sm:w-auto"
                   data-state={activeTab === "trajectory" ? "active" : "inactive"}
                   onClick={() => setActiveTab("trajectory")}
                 >
@@ -122,7 +122,7 @@ export function ResultsPanel({
                 </button>
                 <button
                   type="button"
-                  className="tab-button"
+                  className="tab-button w-full sm:w-auto"
                   data-state={activeTab === "overlap" ? "active" : "inactive"}
                   onClick={() => setActiveTab("overlap")}
                 >
@@ -130,7 +130,7 @@ export function ResultsPanel({
                 </button>
               </div>
 
-              <div className="overflow-hidden rounded-[18px] border border-white/5 bg-black/15 p-2">
+              <div className="overflow-hidden rounded-[14px] border border-white/5 bg-black/15 p-2 sm:rounded-[18px]">
                 <img
                   alt={activeTab === "trajectory" ? copy.recallTrajectory : copy.overlapAll}
                   src={

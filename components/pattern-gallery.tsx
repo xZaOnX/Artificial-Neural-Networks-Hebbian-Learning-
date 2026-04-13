@@ -15,7 +15,7 @@ export function PatternGallery({
 }: PatternGalleryProps) {
   return (
     <details className="panel" open={false}>
-      <summary className="cursor-pointer px-6 py-5 sm:px-7">
+      <summary className="cursor-pointer px-4 py-4 sm:px-7 sm:py-5">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="section-label">{copy.storedPatterns}</p>
@@ -46,11 +46,11 @@ export function PatternGallery({
             <p className="text-sm leading-7 text-[rgb(var(--text-secondary))]">
               {gallery.galleryCaption}
             </p>
-            <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black/15 p-3">
+            <div className="overflow-hidden rounded-[20px] border border-white/10 bg-black/15 p-2 sm:rounded-[24px] sm:p-3">
               <img
                 alt={copy.storedPatterns}
                 src={gallery.galleryImage}
-                className="w-full rounded-[18px] border border-white/5 bg-black/15"
+                className="w-full rounded-[14px] border border-white/5 bg-black/15 sm:rounded-[18px]"
               />
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useEffect, useState, useTransition } from "react";
+import { useDeferredValue, useEffect, useRef, useState, useTransition } from "react";
 
 import { ControlPanel } from "@/components/control-panel";
 import { PatternGallery } from "@/components/pattern-gallery";
@@ -27,6 +27,7 @@ async function readJsonResponse<T>(response: Response): Promise<T> {
 }
 
 export function HebbianDashboard() {
+  const resultsRef = useRef<HTMLDivElement | null>(null);
   const [lang, setLang] = useState<Lang>("en");
   const [inputMode, setInputMode] = useState<InputMode>("stored");
   const [selectedPattern, setSelectedPattern] = useState("");
@@ -133,6 +134,12 @@ export function HebbianDashboard() {
       }
 
       setResult(payload as RecallResponse);
+
+      if (typeof window !== "undefined" && window.matchMedia("(max-width: 1279px)").matches) {
+        requestAnimationFrame(() => {
+          resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
     } catch (error) {
       const message = error instanceof Error && error.message ? error.message : copy.recallError;
       setRecallError(message);
@@ -170,14 +177,14 @@ export function HebbianDashboard() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-[1280px] flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <main className="mx-auto flex min-h-screen w-full max-w-[1280px] flex-col gap-4 px-3 py-4 sm:gap-6 sm:px-6 sm:py-10 lg:px-8">
       <section className="panel overflow-hidden">
         <div className="panel-body space-y-4">
-          <div className="inline-flex w-fit items-center rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-[#ffd166]">
+          <div className="inline-flex w-full flex-wrap items-center rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#ffd166] sm:w-fit sm:text-xs sm:tracking-[0.24em]">
             {copy.subtitle}
           </div>
           <div className="max-w-4xl space-y-4">
-            <h1 className="font-display text-4xl font-semibold tracking-[-0.06em] text-[rgb(var(--text-primary))] sm:text-5xl lg:text-6xl">
+            <h1 className="font-display text-3xl font-semibold tracking-[-0.06em] text-[rgb(var(--text-primary))] sm:text-5xl lg:text-6xl">
               {copy.title}
             </h1>
             <p className="max-w-3xl text-sm leading-7 text-[rgb(var(--text-secondary))] sm:text-base">
@@ -187,7 +194,7 @@ export function HebbianDashboard() {
         </div>
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
+      <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)] xl:gap-6">
         <ControlPanel
           copy={copy}
           lang={lang}
@@ -218,12 +225,14 @@ export function HebbianDashboard() {
           onSubmit={() => void submitRecall()}
         />
 
-        <ResultsPanel
-          copy={copy}
-          result={result}
-          isSubmitting={isSubmitting}
-          error={recallError}
-        />
+        <div ref={resultsRef} className="scroll-mt-4">
+          <ResultsPanel
+            copy={copy}
+            result={result}
+            isSubmitting={isSubmitting}
+            error={recallError}
+          />
+        </div>
       </div>
 
       <PatternGallery
