@@ -1,24 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Varela+Round&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg-primary: 8 17 31;
-  --surface-primary: 10 22 37;
-  --surface-secondary: 16 35 58;
-  --surface-tertiary: 23 52 84;
-  --border-primary: 43 76 115;
-  --border-strong: 255 183 3;
-  --text-primary: 248 250 252;
-  --text-secondary: 159 182 207;
-  --text-muted: 110 136 166;
-  --primary: 255 183 3;
-  --primary-strong: 251 133 0;
-  --danger-surface: 87 18 30;
-  --danger-border: 217 72 95;
-  --danger-text: 254 205 211;
-  --success-surface: 6 95 70;
-  --success-text: 110 231 183;
+  --bg-primary: 247 244 237;
+  --bg-secondary: 237 244 255;
+  --surface-primary: 255 255 255;
+  --surface-secondary: 248 250 252;
+  --surface-tertiary: 239 246 255;
+  --surface-accent: 255 247 237;
+  --border-primary: 203 213 225;
+  --border-subtle: 226 232 240;
+  --border-strong: 37 99 235;
+  --text-primary: 15 23 42;
+  --text-secondary: 51 65 85;
+  --text-muted: 100 116 139;
+  --primary: 37 99 235;
+  --primary-strong: 30 64 175;
+  --accent: 249 115 22;
+  --accent-strong: 194 65 12;
+  --danger-surface: 254 242 242;
+  --danger-border: 248 113 113;
+  --danger-text: 153 27 27;
+  --success-surface: 240 253 244;
+  --success-border: 134 239 172;
+  --success-text: 21 128 61;
 }
 
 @layer base {
@@ -27,22 +35,43 @@
   }
 
   html {
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
     min-height: 100vh;
     background:
-      radial-gradient(circle at top, rgba(255, 183, 3, 0.14), transparent 28%),
-      linear-gradient(180deg, rgba(4, 10, 18, 0.98), rgba(7, 17, 31, 1));
+      radial-gradient(circle at top left, rgba(37, 99, 235, 0.14), transparent 28%),
+      radial-gradient(circle at top right, rgba(249, 115, 22, 0.12), transparent 26%),
+      linear-gradient(180deg, rgb(var(--bg-primary)) 0%, rgb(var(--bg-secondary)) 100%);
     color: rgb(var(--text-primary));
-    font-family: "Avenir Next", "Segoe UI", sans-serif;
+    font-family: "Nunito Sans", "Avenir Next", "Segoe UI", sans-serif;
+    position: relative;
+    text-rendering: optimizeLegibility;
+  }
+
+  body::before {
+    content: "";
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(180deg, rgba(15, 23, 42, 0.4), transparent 85%);
+    opacity: 0.45;
   }
 
   button,
   input,
   select {
     font: inherit;
+  }
+
+  button:not(:disabled),
+  summary {
+    cursor: pointer;
   }
 
   summary {
@@ -54,103 +83,194 @@
   }
 
   ::selection {
-    background: rgba(255, 183, 3, 0.3);
+    background: rgba(37, 99, 235, 0.18);
     color: rgb(var(--text-primary));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
 @layer components {
   .panel {
-    @apply rounded-[24px] border border-white/10 bg-[rgba(10,22,37,0.86)] shadow-panel backdrop-blur-xl sm:rounded-[28px];
+    @apply rounded-[28px] border bg-[rgba(255,255,255,0.72)] shadow-[0_10px_30px_rgba(15,23,42,0.04)] backdrop-blur-md sm:rounded-[34px];
+    border-color: rgb(var(--border-subtle));
   }
 
   .panel-body {
-    @apply p-4 sm:p-7;
+    @apply p-5 sm:p-7 lg:p-8;
   }
 
   .section-label {
-    @apply text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--text-muted))];
+    @apply inline-flex items-center gap-2 text-[0.72rem] font-bold uppercase tracking-[0.2em] text-[rgb(var(--primary))];
+  }
+
+  .section-label::before {
+    content: "";
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 9999px;
+    background: rgba(var(--accent), 0.16);
+    box-shadow: inset 0 0 0 1px rgba(var(--accent), 0.4);
   }
 
   .field-label {
-    @apply text-sm font-semibold text-[rgb(var(--text-primary))];
+    @apply text-sm font-semibold tracking-[-0.01em] text-[rgb(var(--text-primary))];
   }
 
   .field-hint {
-    @apply text-xs text-[rgb(var(--text-muted))];
+    @apply text-xs leading-5 text-[rgb(var(--text-muted))];
   }
 
   .input-base {
-    @apply min-h-12 w-full rounded-2xl border border-[rgb(var(--border-primary))] bg-[rgb(var(--surface-secondary))] px-4 py-3 text-sm text-[rgb(var(--text-primary))] transition duration-150 placeholder:text-[rgb(var(--text-muted))] focus:border-[rgb(var(--border-strong))] focus:outline-none focus:ring-4 focus:ring-[rgba(255,183,3,0.18)] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply min-h-12 w-full rounded-2xl border bg-white px-4 py-3 text-sm text-[rgb(var(--text-primary))] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition duration-150 placeholder:text-[rgb(var(--text-muted))] focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:bg-[rgb(var(--surface-secondary))] disabled:opacity-60;
+    border-color: rgb(var(--border-primary));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+
+  .input-base:hover:not(:disabled) {
+    border-color: rgba(var(--primary), 0.35);
+  }
+
+  .input-base:focus {
+    border-color: rgb(var(--border-strong));
+    --tw-ring-color: rgba(37, 99, 235, 0.16);
   }
 
   .range-base {
-    @apply h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-[rgb(var(--primary))] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply h-2 w-full cursor-pointer appearance-none rounded-full bg-[rgb(var(--border-subtle))] accent-[rgb(var(--primary))] disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .segmented {
-    @apply grid gap-2 rounded-2xl border border-white/10 bg-black/20 p-1;
+    @apply grid gap-2 rounded-[22px] border bg-[rgb(var(--surface-secondary))] p-1.5;
+    border-color: rgb(var(--border-subtle));
   }
 
   .segment-button {
-    @apply min-h-12 rounded-xl px-3 py-2 text-sm font-medium text-[rgb(var(--text-secondary))] transition duration-150 focus:outline-none focus:ring-4 focus:ring-[rgba(255,183,3,0.18)] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply min-h-12 rounded-[18px] px-3 py-2 text-sm font-semibold text-[rgb(var(--text-secondary))] transition duration-150 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .segment-button:hover:not(:disabled) {
+    background: rgba(var(--primary), 0.08);
   }
 
   .segment-button[data-state="active"] {
-    @apply bg-[linear-gradient(135deg,rgba(255,183,3,0.18),rgba(251,133,0,0.24))] text-[rgb(var(--text-primary))] shadow-[inset_0_0_0_1px_rgba(255,183,3,0.32)];
+    @apply bg-[rgb(var(--primary))] text-white shadow-[0_8px_20px_rgba(37,99,235,0.18)];
+  }
+
+  .segment-button:focus {
+    --tw-ring-color: rgba(37, 99, 235, 0.16);
   }
 
   .primary-button {
-    @apply inline-flex min-h-[52px] w-full items-center justify-center gap-3 rounded-2xl border border-transparent bg-[linear-gradient(135deg,rgb(var(--primary)),rgb(var(--primary-strong)))] px-4 py-3 font-semibold text-[#09111c] transition duration-150 hover:-translate-y-0.5 hover:brightness-105 focus:outline-none focus:ring-4 focus:ring-[rgba(255,183,3,0.18)] disabled:cursor-wait disabled:opacity-75 disabled:hover:translate-y-0;
+    @apply inline-flex min-h-[54px] w-full items-center justify-center gap-3 rounded-2xl border border-transparent px-4 py-3 font-semibold text-white transition duration-150 focus:outline-none focus:ring-4 disabled:cursor-wait disabled:opacity-75 disabled:hover:translate-y-0;
+    background: linear-gradient(135deg, rgb(var(--accent)), rgb(var(--accent-strong)));
+    box-shadow: 0 14px 28px rgba(249, 115, 22, 0.2);
+  }
+
+  .primary-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    filter: brightness(1.02);
+  }
+
+  .primary-button:focus {
+    --tw-ring-color: rgba(249, 115, 22, 0.18);
   }
 
   .secondary-button {
-    @apply inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-[rgb(var(--text-secondary))] transition duration-150 hover:bg-white/10 focus:outline-none focus:ring-4 focus:ring-[rgba(255,183,3,0.18)] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-11 items-center justify-center rounded-xl border bg-white px-3 py-2 text-sm font-semibold text-[rgb(var(--text-secondary))] transition duration-150 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50;
+    border-color: rgb(var(--border-subtle));
   }
 
-  .metric-card {
-    @apply rounded-2xl border border-white/10 bg-white/5 p-4;
+  .secondary-button:hover:not(:disabled) {
+    border-color: rgba(var(--primary), 0.3);
+    background: rgba(var(--primary), 0.04);
+  }
+
+  .secondary-button:focus {
+    --tw-ring-color: rgba(37, 99, 235, 0.16);
   }
 
   .status-badge {
-    @apply inline-flex items-center rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.16em];
+    @apply inline-flex items-center rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-[0.16em];
   }
 
   .status-badge[data-variant="success"] {
-    background: rgba(16, 185, 129, 0.16);
-    color: #86efac;
+    background: rgba(var(--success-surface), 0.92);
+    border-color: rgb(var(--success-border));
+    color: rgb(var(--success-text));
   }
 
   .status-badge[data-variant="failure"] {
-    background: rgba(217, 72, 95, 0.16);
+    background: rgba(var(--danger-surface), 0.94);
+    border-color: rgb(var(--danger-border));
     color: rgb(var(--danger-text));
   }
 
   .status-badge[data-variant="neutral"] {
-    background: rgba(255, 183, 3, 0.14);
-    color: #ffd166;
+    background: rgba(var(--accent), 0.1);
+    border-color: rgba(var(--accent), 0.26);
+    color: rgb(var(--accent-strong));
   }
 
   .tab-button {
-    @apply min-h-11 rounded-xl px-4 py-2 text-sm font-medium text-[rgb(var(--text-secondary))] transition duration-150 focus:outline-none focus:ring-4 focus:ring-[rgba(255,183,3,0.18)];
+    @apply min-h-11 rounded-xl px-4 py-2 text-sm font-semibold text-[rgb(var(--text-secondary))] transition duration-150 focus:outline-none focus:ring-4;
+  }
+
+  .tab-button:hover {
+    background: rgba(var(--primary), 0.06);
   }
 
   .tab-button[data-state="active"] {
-    @apply bg-white/10 text-[rgb(var(--text-primary))];
+    @apply bg-white text-[rgb(var(--text-primary))] shadow-[0_10px_18px_rgba(148,163,184,0.14)];
+  }
+
+  .tab-button:focus {
+    --tw-ring-color: rgba(37, 99, 235, 0.16);
   }
 
   .alert-card {
-    @apply rounded-2xl border px-4 py-3 text-sm;
+    @apply rounded-[22px] border px-4 py-3 text-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.75)];
   }
 
   .alert-card[data-variant="error"] {
     border-color: rgb(var(--danger-border));
-    background: rgba(var(--danger-surface), 0.45);
+    background: rgb(var(--danger-surface));
     color: rgb(var(--danger-text));
   }
 
   .skeleton {
-    @apply animate-pulse rounded-2xl bg-white/10;
+    @apply animate-pulse rounded-[24px];
+    background: linear-gradient(
+      90deg,
+      rgba(226, 232, 240, 0.66) 0%,
+      rgba(241, 245, 249, 0.96) 50%,
+      rgba(226, 232, 240, 0.66) 100%
+    );
+  }
+
+  .info-tile-label {
+    @apply text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[rgb(var(--text-muted))];
+  }
+
+  .image-frame {
+    @apply overflow-hidden rounded-[24px] border bg-[rgba(255,255,255,0.58)] p-1 sm:p-2;
+    border-color: rgb(var(--border-subtle));
+  }
+
+  .detail-row {
+    @apply flex items-center justify-between gap-4 border-b pb-3 last:border-b-0 last:pb-0;
+    border-color: rgba(var(--border-primary), 0.45);
   }
 }
 
@@ -159,14 +279,16 @@
   height: 18px;
   width: 18px;
   border-radius: 9999px;
-  border: 2px solid rgba(9, 17, 28, 0.65);
+  border: 2px solid rgba(255, 255, 255, 0.94);
   background: rgb(var(--primary));
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.24);
 }
 
 .range-base::-moz-range-thumb {
   height: 18px;
   width: 18px;
   border-radius: 9999px;
-  border: 2px solid rgba(9, 17, 28, 0.65);
+  border: 2px solid rgba(255, 255, 255, 0.94);
   background: rgb(var(--primary));
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.24);
 }

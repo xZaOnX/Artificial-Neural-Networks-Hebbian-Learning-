@@ -60,7 +60,7 @@ export function CustomPatternEditor({
   }
 
   return (
-    <div className="space-y-4 rounded-[20px] border border-white/10 bg-black/15 p-3 sm:rounded-[24px] sm:p-4">
+    <div className="space-y-4 pt-2">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="field-label">{copy.drawTitle}</p>
@@ -88,7 +88,7 @@ export function CustomPatternEditor({
 
       <div
         aria-label={copy.drawTitle}
-        className="grid gap-1 rounded-[18px] bg-[rgba(7,17,31,0.75)] p-2 select-none sm:gap-2 sm:rounded-[22px] sm:p-3"
+        className="grid gap-1 rounded-[20px] border border-[rgb(var(--border-subtle))] bg-[rgb(var(--surface-tertiary))] p-2 select-none sm:gap-2 sm:rounded-[24px] sm:p-3"
         style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))` }}
       >
         {pattern.map((value, index) => {
@@ -107,10 +107,10 @@ export function CustomPatternEditor({
               onPointerEnter={() => handlePointerEnter(index)}
               onPointerUp={() => setDragValue(null)}
               className={[
-                "aspect-square touch-none rounded-md border transition duration-150 focus:outline-none focus:ring-4 focus:ring-[rgba(255,183,3,0.18)] disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-lg",
+                "aspect-square touch-none rounded-md border transition duration-150 focus:outline-none focus:ring-4 focus:ring-[rgba(37,99,235,0.16)] disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-lg",
                 isActive
-                  ? "border-amber-300/60 bg-[linear-gradient(135deg,rgba(255,183,3,0.9),rgba(251,133,0,0.95))] shadow-[0_8px_24px_rgba(251,133,0,0.28)]"
-                  : "border-white/10 bg-[rgba(16,35,58,0.72)] hover:border-amber-300/30 hover:bg-[rgba(23,52,84,0.86)]",
+                  ? "border-[rgba(37,99,235,0.52)] bg-[linear-gradient(135deg,rgba(37,99,235,0.94),rgba(30,64,175,0.96))] shadow-[0_10px_20px_rgba(37,99,235,0.2)]"
+                  : "border-[rgb(var(--border-subtle))] bg-white hover:border-[rgba(37,99,235,0.3)] hover:bg-[rgba(255,255,255,0.94)]",
               ].join(" ")}
             >
               <span className="sr-only">{`${copy.drawTitle} ${index + 1}`}</span>

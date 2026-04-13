@@ -14,6 +14,10 @@ function createPattern(length: number, value: 1 | -1) {
   return Array.from({ length }, () => value);
 }
 
+function formatRatio(value: number) {
+  return value.toFixed(2);
+}
+
 async function readJsonResponse<T>(response: Response): Promise<T> {
   const contentType = response.headers.get("content-type") ?? "";
 
@@ -53,6 +57,32 @@ export function HebbianDashboard() {
   const deferredCopy = COPY[deferredLang];
   const gridSize = gallery?.gridSize ?? DEFAULT_GRID_SIZE;
   const isBusy = isSubmitting || isTransitioning;
+  const summaryItems = [
+    {
+      label: copy.inputMode,
+      value: inputMode === "stored" ? copy.storedPattern : copy.drawCustom,
+    },
+    {
+      label: copy.pattern,
+      value: inputMode === "stored" ? selectedPattern || "--" : `${gridSize} x ${gridSize}`,
+    },
+    {
+      label: copy.updateMode,
+      value: updateMode === "synchronous" ? copy.synchronous : copy.asynchronous,
+    },
+    {
+      label: copy.noiseLevel,
+      value: formatRatio(noiseLevel),
+    },
+    {
+      label: copy.maskRatio,
+      value: formatRatio(maskRatio),
+    },
+    {
+      label: copy.maxRecallSteps,
+      value: String(steps),
+    },
+  ];
 
   useEffect(() => {
     const controller = new AbortController();
@@ -177,24 +207,70 @@ export function HebbianDashboard() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-[1280px] flex-col gap-4 px-3 py-4 sm:gap-6 sm:px-6 sm:py-10 lg:px-8">
+    <main className="mx-auto flex min-h-screen w-full max-w-[1420px] flex-col gap-5 px-4 py-4 sm:gap-6 sm:px-6 sm:py-10 lg:px-8 xl:px-10">
       <section className="panel overflow-hidden">
-        <div className="panel-body space-y-4">
-          <div className="inline-flex w-full flex-wrap items-center rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#ffd166] sm:w-fit sm:text-xs sm:tracking-[0.24em]">
-            {copy.subtitle}
+        <div className="panel-body relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-end">
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,rgba(37,99,235,0.95),rgba(249,115,22,0.85))]"
+          />
+
+          <div className="space-y-6">
+            <div className="inline-flex w-full flex-wrap items-center rounded-full border border-[rgba(37,99,235,0.16)] bg-[rgba(255,255,255,0.76)] px-4 py-2 text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[rgb(var(--primary))] sm:w-fit sm:text-xs sm:tracking-[0.24em]">
+              {copy.subtitle}
+            </div>
+
+            <div className="max-w-4xl space-y-4">
+              <h1 className="font-display text-4xl font-semibold leading-none tracking-[-0.08em] text-[rgb(var(--text-primary))] sm:text-5xl lg:text-[4.4rem]">
+                {copy.title}
+              </h1>
+              <p className="max-w-3xl text-sm leading-7 text-[rgb(var(--text-secondary))] sm:text-base sm:leading-8">
+                {copy.description}
+              </p>
+            </div>
+
+            <div className="grid gap-4 border-y border-[rgb(var(--border-subtle))] py-4 sm:grid-cols-3">
+              {summaryItems.slice(0, 3).map((item) => (
+                <div
+                  key={item.label}
+                  className="sm:border-l sm:border-[rgb(var(--border-subtle))] sm:pl-4 first:sm:border-l-0 first:sm:pl-0"
+                >
+                  <p className="info-tile-label">{item.label}</p>
+                  <p className="mt-3 text-xl font-semibold tracking-[-0.05em] text-[rgb(var(--text-primary))] sm:text-2xl">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="max-w-4xl space-y-4">
-            <h1 className="font-display text-3xl font-semibold tracking-[-0.06em] text-[rgb(var(--text-primary))] sm:text-5xl lg:text-6xl">
-              {copy.title}
-            </h1>
-            <p className="max-w-3xl text-sm leading-7 text-[rgb(var(--text-secondary))] sm:text-base">
-              {copy.description}
-            </p>
+
+          <div className="border-t border-[rgb(var(--border-primary))] pt-5 lg:border-l lg:border-t-0 lg:pl-8">
+            <div className="space-y-5">
+              <div>
+                <p className="section-label">{copy.controls}</p>
+                <h2 className="mt-3 font-display text-2xl font-semibold tracking-[-0.05em] text-[rgb(var(--text-primary))]">
+                  {copy.recallSettings}
+                </h2>
+              </div>
+
+              <div className="space-y-3">
+                {summaryItems.map((item) => (
+                  <div key={item.label} className="detail-row">
+                    <span className="text-sm font-semibold text-[rgb(var(--text-secondary))]">
+                      {item.label}
+                    </span>
+                    <span className="text-sm font-bold text-[rgb(var(--text-primary))]">
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)] xl:gap-6">
+      <div className="grid gap-5 xl:grid-cols-[380px_minmax(0,1fr)] xl:items-start xl:gap-6">
         <ControlPanel
           copy={copy}
           lang={lang}
@@ -225,7 +301,7 @@ export function HebbianDashboard() {
           onSubmit={() => void submitRecall()}
         />
 
-        <div ref={resultsRef} className="scroll-mt-4">
+        <div ref={resultsRef} className="scroll-mt-6">
           <ResultsPanel
             copy={copy}
             result={result}
@@ -243,21 +319,26 @@ export function HebbianDashboard() {
       />
 
       <section className="panel">
-        <div className="panel-body space-y-5">
-          <div>
+        <div className="panel-body space-y-6">
+          <div className="max-w-2xl">
             <p className="section-label">{copy.howItWorks}</p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">
+            <h2 className="mt-3 font-display text-3xl font-semibold tracking-[-0.05em] text-[rgb(var(--text-primary))]">
               {copy.howItWorks}
             </h2>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
-            {copy.explanation.map((paragraph) => (
+            {copy.explanation.map((paragraph, index) => (
               <div
                 key={paragraph}
-                className="rounded-[24px] border border-white/10 bg-black/15 p-5 text-sm leading-7 text-[rgb(var(--text-secondary))]"
+                className="border-t border-[rgb(var(--border-primary))] pt-4"
               >
-                {paragraph}
+                <div className="text-[0.72rem] font-black uppercase tracking-[0.24em] text-[rgb(var(--accent))]">
+                  {String(index + 1).padStart(2, "0")}
+                </div>
+                <p className="mt-4 text-sm leading-7 text-[rgb(var(--text-secondary))]">
+                  {paragraph}
+                </p>
               </div>
             ))}
           </div>
