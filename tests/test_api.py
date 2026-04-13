@@ -4,6 +4,9 @@ tests/test_api.py — smoke tests for the Vercel Python API helpers.
 
 import pytest
 
+from api.gallery import app as gallery_app
+from api.recall import app as recall_app
+from local_api_server import app as local_api_app
 from patterns import GRID_SIZE
 from vercel_api import N_NEURONS, get_gallery_payload, run_recall
 
@@ -63,3 +66,59 @@ def test_custom_recall_returns_neutral_badge():
 def test_custom_recall_rejects_invalid_pattern_length():
     with pytest.raises(ValueError):
         run_recall({"input_mode": "custom", "custom_pattern": [1, -1]})
+
+
+def test_gallery_wsgi_route_accepts_mounted_path():
+    client = gallery_app.test_client()
+    response = client.get("/api/gallery?lang=en")
+
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert payload["patternNames"]
+
+
+def test_recall_wsgi_route_accepts_mounted_path():
+    client = recall_app.test_client()
+    response = client.post(
+        "/api/recall",
+        json={
+            "lang": "en",
+            "input_mode": "stored",
+            "pattern": "A",
+            "noise_level": 0.1,
+            "mask_ratio": 0.0,
+            "update_mode": "synchronous",
+            "steps": 5,
+            "threshold": 0.0,
+            "seed": 3,
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert payload["metrics"]["nearest"]
+
+
+def test_local_dev_api_server_matches_next_proxy_paths():
+    client = local_api_app.test_client()
+
+    gallery_response = client.get("/api/gallery?lang=en")
+    assert gallery_response.status_code == 200
+    assert gallery_response.get_json()["patternNames"]
+
+    recall_response = client.post(
+        "/api/recall",
+        json={
+            "lang": "en",
+            "input_mode": "stored",
+            "pattern": "A",
+            "noise_level": 0.1,
+            "mask_ratio": 0.0,
+            "update_mode": "synchronous",
+            "steps": 5,
+            "threshold": 0.0,
+            "seed": 3,
+        },
+    )
+    assert recall_response.status_code == 200
+    assert recall_response.get_json()["metrics"]["nearest"]
