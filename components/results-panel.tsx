@@ -25,27 +25,20 @@ export function ResultsPanel({
     setActiveTab("trajectory");
   }, [result?.images.comparison]);
 
-  const badgeText =
-    result?.inputMode === "custom"
-      ? `→ ${result.metrics.nearest}`
-      : result?.isCorrect
-        ? copy.success
-        : copy.failure;
-
   return (
-    <section className="panel min-h-0 xl:min-h-[620px]">
+    <section className="panel min-h-0 xl:min-h-[720px]">
       <div className="panel-body flex h-full flex-col gap-6">
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:flex-wrap">
           <div className="space-y-2">
             <p className="section-label">{copy.result}</p>
-            <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[rgb(var(--text-primary))]">
+            <h2 className="font-display text-3xl font-semibold tracking-[-0.05em] text-[rgb(var(--text-primary))]">
               {copy.result}
             </h2>
           </div>
 
           {result ? (
             <span className="status-badge" data-variant={result.badge.variant}>
-              {badgeText}
+              {result.badge.text}
             </span>
           ) : null}
         </div>
@@ -57,7 +50,7 @@ export function ResultsPanel({
         ) : null}
 
         {!result && !isSubmitting && !error ? (
-          <div className="flex flex-1 items-center justify-center rounded-[20px] border border-dashed border-white/10 bg-black/10 px-4 py-10 text-center sm:rounded-[24px] sm:px-6 sm:py-16">
+          <div className="flex flex-1 items-center justify-center rounded-[24px] border border-dashed border-[rgba(37,99,235,0.22)] bg-[rgba(255,255,255,0.58)] px-4 py-10 text-center sm:rounded-[28px] sm:px-6 sm:py-16">
             <p className="max-w-md text-sm leading-7 text-[rgb(var(--text-secondary))]">
               {copy.emptyState}
             </p>
@@ -78,39 +71,46 @@ export function ResultsPanel({
 
         {result && !isSubmitting ? (
           <div className="space-y-5">
-            <div className="overflow-hidden rounded-[20px] border border-white/10 bg-black/20 p-2 sm:rounded-[24px] sm:p-3">
+            <div className="image-frame">
               <img
                 alt={copy.result}
                 src={result.images.comparison}
-                className="w-full rounded-[14px] border border-white/5 bg-black/15 sm:rounded-[18px]"
+                className="w-full rounded-[16px] border border-[rgb(var(--border-subtle))] bg-[rgb(var(--surface-secondary))] sm:rounded-[20px]"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-              <div className="metric-card">
+            <div className="grid gap-4 border-y border-[rgb(var(--border-subtle))] py-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="space-y-1 xl:border-l xl:border-[rgb(var(--border-subtle))] xl:pl-5 first:xl:border-l-0 first:xl:pl-0">
                 <p className="field-hint">{copy.accuracy}</p>
-                <p className="mt-2 text-lg font-semibold sm:mt-3 sm:text-2xl">{result.metrics.accuracyLabel}</p>
+                <p className="mt-3 text-xl font-semibold tracking-[-0.04em] sm:text-3xl">
+                  {result.metrics.accuracyLabel}
+                </p>
               </div>
-              <div className="metric-card">
+              <div className="space-y-1 xl:border-l xl:border-[rgb(var(--border-subtle))] xl:pl-5">
                 <p className="field-hint">{copy.errors}</p>
-                <p className="mt-2 text-lg font-semibold sm:mt-3 sm:text-2xl">{result.metrics.errorsLabel}</p>
+                <p className="mt-3 text-xl font-semibold tracking-[-0.04em] sm:text-3xl">
+                  {result.metrics.errorsLabel}
+                </p>
               </div>
-              <div className="metric-card">
+              <div className="space-y-1 xl:border-l xl:border-[rgb(var(--border-subtle))] xl:pl-5">
                 <p className="field-hint">{copy.overlap}</p>
-                <p className="mt-2 text-lg font-semibold sm:mt-3 sm:text-2xl">{result.metrics.overlapLabel}</p>
+                <p className="mt-3 text-xl font-semibold tracking-[-0.04em] sm:text-3xl">
+                  {result.metrics.overlapLabel}
+                </p>
               </div>
-              <div className="metric-card">
+              <div className="space-y-1 xl:border-l xl:border-[rgb(var(--border-subtle))] xl:pl-5">
                 <p className="field-hint">{copy.nearestPattern}</p>
-                <p className="mt-2 text-lg font-semibold sm:mt-3 sm:text-2xl">{result.metrics.nearest}</p>
+                <p className="mt-3 text-xl font-semibold tracking-[-0.04em] sm:text-3xl">
+                  {result.metrics.nearest}
+                </p>
               </div>
             </div>
 
-            <p className="text-sm text-[rgb(var(--text-secondary))]">
-              {copy.convergedLabel(result.summary.convergedSteps)} {" • "}
-              {copy.energyLabel(result.summary.energy)}
+            <p className="text-sm font-semibold text-[rgb(var(--text-secondary))]">
+              {result.infoLine}
             </p>
 
-            <div className="rounded-[20px] border border-white/10 bg-black/15 p-2 sm:rounded-[24px] sm:p-3">
+            <div className="border-t border-[rgb(var(--border-subtle))] pt-5">
               <div className="mb-3 grid grid-cols-2 gap-2 sm:mb-4 sm:flex sm:flex-wrap">
                 <button
                   type="button"
@@ -130,7 +130,7 @@ export function ResultsPanel({
                 </button>
               </div>
 
-              <div className="overflow-hidden rounded-[14px] border border-white/5 bg-black/15 p-2 sm:rounded-[18px]">
+              <div className="image-frame">
                 <img
                   alt={activeTab === "trajectory" ? copy.recallTrajectory : copy.overlapAll}
                   src={
@@ -138,7 +138,7 @@ export function ResultsPanel({
                       ? result.images.trajectory
                       : result.images.overlap
                   }
-                  className="w-full rounded-[14px]"
+                  className="w-full rounded-[16px] border border-[rgb(var(--border-subtle))] bg-[rgb(var(--surface-secondary))]"
                 />
               </div>
             </div>

@@ -8,11 +8,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Avenir Next"', '"Segoe UI"', "sans-serif"],
-        display: ['"Avenir Next"', '"Segoe UI"', "sans-serif"],
+        sans: ['"Nunito Sans"', '"Avenir Next"', '"Segoe UI"', "sans-serif"],
+        display: ['"Varela Round"', '"Nunito Sans"', '"Avenir Next"', '"Segoe UI"', "sans-serif"],
       },
       boxShadow: {
-        panel: "0 24px 60px rgba(4, 11, 20, 0.42)",
+        panel: "0 20px 60px rgba(15, 23, 42, 0.08), 0 6px 18px rgba(148, 163, 184, 0.12)",
       },
     },
   },

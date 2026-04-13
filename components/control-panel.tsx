@@ -65,92 +65,99 @@ export function ControlPanel({
   onSubmit,
 }: ControlPanelProps) {
   return (
-    <aside className="panel">
-      <div className="panel-body space-y-6">
-        <div>
+    <aside className="panel xl:sticky xl:top-8">
+      <div className="panel-body space-y-5">
+        <div className="space-y-3">
           <p className="section-label">{copy.controls}</p>
+          <h2 className="font-display text-3xl font-semibold tracking-[-0.05em] text-[rgb(var(--text-primary))]">
+            {copy.controls}
+          </h2>
         </div>
 
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <label className="field-label">{copy.language}</label>
+        <div className="grid gap-5 border-t border-[rgb(var(--border-subtle))] pt-5">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="field-label">{copy.language}</label>
+            </div>
+            <div className="segmented grid-cols-2">
+              {(["en", "tr"] as const).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  disabled={isBusy}
+                  data-state={lang === value ? "active" : "inactive"}
+                  className="segment-button uppercase"
+                  onClick={() => onLangChange(value)}
+                >
+                  {value}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="segmented grid-cols-2">
-            {(["en", "tr"] as const).map((value) => (
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="field-label">{copy.inputMode}</label>
+            </div>
+            <div className="segmented grid-cols-2">
               <button
-                key={value}
                 type="button"
                 disabled={isBusy}
-                data-state={lang === value ? "active" : "inactive"}
-                className="segment-button uppercase"
-                onClick={() => onLangChange(value)}
+                data-state={inputMode === "stored" ? "active" : "inactive"}
+                className="segment-button"
+                onClick={() => onInputModeChange("stored")}
               >
-                {value}
+                {copy.storedPattern}
               </button>
-            ))}
+              <button
+                type="button"
+                disabled={isBusy}
+                data-state={inputMode === "custom" ? "active" : "inactive"}
+                className="segment-button"
+                onClick={() => onInputModeChange("custom")}
+              >
+                {copy.drawCustom}
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <label className="field-label">{copy.inputMode}</label>
-          </div>
-          <div className="segmented grid-cols-2">
-            <button
-              type="button"
-              disabled={isBusy}
-              data-state={inputMode === "stored" ? "active" : "inactive"}
-              className="segment-button"
-              onClick={() => onInputModeChange("stored")}
+        <div className="space-y-4 border-t border-[rgb(var(--border-subtle))] pt-5">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <label className="field-label" htmlFor="pattern-select">
+                {copy.pattern}
+              </label>
+            </div>
+            <select
+              id="pattern-select"
+              className="input-base"
+              disabled={isBusy || inputMode === "custom" || patternNames.length === 0}
+              value={selectedPattern}
+              onChange={(event) => onPatternChange(event.target.value)}
             >
-              {copy.storedPattern}
-            </button>
-            <button
-              type="button"
+              {patternNames.map((patternName) => (
+                <option key={patternName} value={patternName}>
+                  {patternName}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {inputMode === "custom" ? (
+            <CustomPatternEditor
+              copy={copy}
+              gridSize={gridSize}
+              pattern={customPattern}
               disabled={isBusy}
-              data-state={inputMode === "custom" ? "active" : "inactive"}
-              className="segment-button"
-              onClick={() => onInputModeChange("custom")}
-            >
-              {copy.drawCustom}
-            </button>
-          </div>
+              onSetCell={onSetCustomCell}
+              onClear={onClearCustomPattern}
+              onFill={onFillCustomPattern}
+            />
+          ) : null}
         </div>
 
-        <div className="space-y-3">
-          <div className="flex items-center justify-between gap-3">
-            <label className="field-label" htmlFor="pattern-select">
-              {copy.pattern}
-            </label>
-          </div>
-          <select
-            id="pattern-select"
-            className="input-base"
-            disabled={isBusy || inputMode === "custom" || patternNames.length === 0}
-            value={selectedPattern}
-            onChange={(event) => onPatternChange(event.target.value)}
-          >
-            {patternNames.map((patternName) => (
-              <option key={patternName} value={patternName}>
-                {patternName}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {inputMode === "custom" ? (
-          <CustomPatternEditor
-            copy={copy}
-            gridSize={gridSize}
-            pattern={customPattern}
-            disabled={isBusy}
-            onSetCell={onSetCustomCell}
-            onClear={onClearCustomPattern}
-            onFill={onFillCustomPattern}
-          />
-        ) : null}
-
-        <div className="space-y-4">
+        <div className="space-y-4 border-t border-[rgb(var(--border-subtle))] pt-5">
           <p className="section-label">{copy.corruption}</p>
 
           <div className="space-y-2">
@@ -196,7 +203,7 @@ export function ControlPanel({
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 border-t border-[rgb(var(--border-subtle))] pt-5">
           <p className="section-label">{copy.recallSettings}</p>
 
           <div className="space-y-3">
