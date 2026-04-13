@@ -25,7 +25,7 @@ interface ControlPanelProps {
   onStepsChange: (value: number) => void;
   onThresholdChange: (value: number) => void;
   onSeedChange: (value: number) => void;
-  onToggleCustomCell: (index: number) => void;
+  onSetCustomCell: (index: number, value: 1 | -1) => void;
   onClearCustomPattern: () => void;
   onFillCustomPattern: () => void;
   onSubmit: () => void;
@@ -59,7 +59,7 @@ export function ControlPanel({
   onStepsChange,
   onThresholdChange,
   onSeedChange,
-  onToggleCustomCell,
+  onSetCustomCell,
   onClearCustomPattern,
   onFillCustomPattern,
   onSubmit,
@@ -144,7 +144,7 @@ export function ControlPanel({
             gridSize={gridSize}
             pattern={customPattern}
             disabled={isBusy}
-            onToggleCell={onToggleCustomCell}
+            onSetCell={onSetCustomCell}
             onClear={onClearCustomPattern}
             onFill={onFillCustomPattern}
           />

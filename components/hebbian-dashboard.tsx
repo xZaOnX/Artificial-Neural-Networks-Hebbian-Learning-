@@ -14,6 +14,18 @@ function createPattern(length: number, value: 1 | -1) {
   return Array.from({ length }, () => value);
 }
 
+async function readJsonResponse<T>(response: Response): Promise<T> {
+  const contentType = response.headers.get("content-type") ?? "";
+
+  if (!contentType.includes("application/json")) {
+    const body = (await response.text()).trim();
+    const snippet = body.slice(0, 160) || `HTTP ${response.status}`;
+    throw new Error(snippet);
+  }
+
+  return (await response.json()) as T;
+}
+
 export function HebbianDashboard() {
   const [lang, setLang] = useState<Lang>("en");
   const [inputMode, setInputMode] = useState<InputMode>("stored");
@@ -55,10 +67,11 @@ export function HebbianDashboard() {
         });
 
         if (!response.ok) {
-          throw new Error(deferredCopy.galleryError);
+          const payload = await readJsonResponse<{ error?: string }>(response);
+          throw new Error(payload.error || deferredCopy.galleryError);
         }
 
-        const payload = (await response.json()) as GalleryResponse;
+        const payload = await readJsonResponse<GalleryResponse>(response);
         setGallery(payload);
         setSelectedPattern((current) =>
           payload.patternNames.includes(current) ? current : payload.defaultPattern,
@@ -113,7 +126,7 @@ export function HebbianDashboard() {
         }),
       });
 
-      const payload = (await response.json()) as RecallResponse | { error?: string };
+      const payload = await readJsonResponse<RecallResponse | { error?: string }>(response);
 
       if (!response.ok) {
         throw new Error(payload && "error" in payload && payload.error ? payload.error : copy.recallError);
@@ -144,10 +157,14 @@ export function HebbianDashboard() {
     });
   }
 
-  function handleToggleCustomCell(index: number) {
+  function handleSetCustomCell(index: number, value: 1 | -1) {
     setCustomPattern((current) => {
+      if (current[index] === value) {
+        return current;
+      }
+
       const next = [...current];
-      next[index] = next[index] > 0 ? -1 : 1;
+      next[index] = value;
       return next;
     });
   }
@@ -195,7 +212,7 @@ export function HebbianDashboard() {
           onStepsChange={setSteps}
           onThresholdChange={setThreshold}
           onSeedChange={setSeed}
-          onToggleCustomCell={handleToggleCustomCell}
+          onSetCustomCell={handleSetCustomCell}
           onClearCustomPattern={() => setCustomPattern(createPattern(gridSize * gridSize, -1))}
           onFillCustomPattern={() => setCustomPattern(createPattern(gridSize * gridSize, 1))}
           onSubmit={() => void submitRecall()}

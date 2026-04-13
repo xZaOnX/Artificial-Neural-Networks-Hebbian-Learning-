@@ -5,8 +5,9 @@ from vercel_api import run_recall
 app = Flask(__name__)
 
 
-@app.route("/", methods=["POST"])
-def recall():
+@app.route("/", defaults={"path": ""}, methods=["POST"])
+@app.route("/<path:path>", methods=["POST"])
+def recall(path: str):
     payload = request.get_json(silent=True) or {}
 
     try:
