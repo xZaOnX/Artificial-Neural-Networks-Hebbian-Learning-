@@ -5,6 +5,8 @@ The weight matrix is built from the outer-product rule (Hebb rule).
 Recall supports both synchronous and asynchronous (random-order) updates.
 """
 
+from __future__ import annotations  # enables X | Y union syntax on Python 3.9
+
 import numpy as np
 from typing import Tuple
 

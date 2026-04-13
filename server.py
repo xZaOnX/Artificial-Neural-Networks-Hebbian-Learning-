@@ -5,7 +5,7 @@ The original Streamlit interface remains in app.py for local usage.
 Vercel serves this Flask app because it supports WSGI-style Python apps.
 """
 
-from __future__ import annotations
+from __future__ import annotations  # enables X | Y union syntax on Python 3.9
 
 import base64
 import io

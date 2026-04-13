@@ -5,6 +5,8 @@ Uses a dark theme with a curated colour palette for a polished look
 when embedded in the Streamlit app.
 """
 
+from __future__ import annotations  # enables X | Y union syntax on Python 3.9
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
