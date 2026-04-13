@@ -1,9 +1,0 @@
-[project]
-name = "hebbian-pattern-recall"
-version = "0.1.0"
-description = "Vercel entrypoint for the Hebbian pattern recall demo"
-readme = "README.md"
-requires-python = ">=3.12,<3.15"
-
-[project.scripts]
-app = "server:app"
