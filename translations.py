@@ -50,6 +50,7 @@ TRANSLATIONS = {
         "failure": "Recall failed",
         # Plots
         "original": "Original",
+        "input": "Input",
         "corrupted": "Corrupted",
         "recalled": "Recalled",
         "pattern_label": "Pattern: {name}",
@@ -64,7 +65,7 @@ TRANSLATIONS = {
         "stored_pattern": "Stored Pattern",
         "draw_custom": "Draw Custom",
         "custom_draw_title": "Draw Your Pattern",
-        "custom_draw_help": "Check cells to activate them. Active = +1 (filled), inactive = −1 (empty). This becomes the network input.",
+        "custom_draw_help": "Check cells to activate them. Active = +1 (filled), inactive = −1 (empty). The drawing is used directly as the network input.",
         "clear_grid": "Clear",
         "fill_grid": "Fill All",
         "explanation": r"""
@@ -141,6 +142,7 @@ in the weight matrix.
         "failure": "Hatirlama basarisiz",
         # Grafikler
         "original": "Orijinal",
+        "input": "Girdi",
         "corrupted": "Bozulmus",
         "recalled": "Hatirlanan",
         "pattern_label": "Oruntu: {name}",
@@ -155,7 +157,7 @@ in the weight matrix.
         "stored_pattern": "Sakli Oruntu",
         "draw_custom": "Ozel Ciz",
         "custom_draw_title": "Oruntuyu Cizin",
-        "custom_draw_help": "Hucreleri isaretleyerek aktif edin. Aktif = +1 (dolu), pasif = -1 (bos). Bu girdi olarak aga verilir.",
+        "custom_draw_help": "Hucreleri isaretleyerek aktif edin. Aktif = +1 (dolu), pasif = -1 (bos). Cizim dogrudan ag girdisi olarak kullanilir.",
         "clear_grid": "Temizle",
         "fill_grid": "Tumunu Doldur",
         "explanation": r"""

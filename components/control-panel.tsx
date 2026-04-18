@@ -64,6 +64,10 @@ export function ControlPanel({
   onFillCustomPattern,
   onSubmit,
 }: ControlPanelProps) {
+  const corruptionDisabled = isBusy || inputMode === "custom";
+  const noiseValueLabel = inputMode === "stored" ? formatRatio(noiseLevel) : "--";
+  const maskValueLabel = inputMode === "stored" ? formatRatio(maskRatio) : "--";
+
   return (
     <aside className="panel xl:sticky xl:top-8">
       <div className="panel-body space-y-5">
@@ -165,7 +169,7 @@ export function ControlPanel({
               <label className="field-label" htmlFor="noise-level">
                 {copy.noiseLevel}
               </label>
-              <span className="field-hint">{formatRatio(noiseLevel)}</span>
+              <span className="field-hint">{noiseValueLabel}</span>
             </div>
             <input
               id="noise-level"
@@ -174,7 +178,7 @@ export function ControlPanel({
               max={1}
               step={0.05}
               value={noiseLevel}
-              disabled={isBusy}
+              disabled={corruptionDisabled}
               className="range-base"
               onChange={(event) => onNoiseLevelChange(Number(event.target.value))}
             />
@@ -186,7 +190,7 @@ export function ControlPanel({
               <label className="field-label" htmlFor="mask-ratio">
                 {copy.maskRatio}
               </label>
-              <span className="field-hint">{formatRatio(maskRatio)}</span>
+              <span className="field-hint">{maskValueLabel}</span>
             </div>
             <input
               id="mask-ratio"
@@ -195,7 +199,7 @@ export function ControlPanel({
               max={1}
               step={0.05}
               value={maskRatio}
-              disabled={isBusy}
+              disabled={corruptionDisabled}
               className="range-base"
               onChange={(event) => onMaskRatioChange(Number(event.target.value))}
             />

@@ -161,23 +161,25 @@ def run_recall(payload: dict[str, Any] | None) -> dict[str, Any]:
     steps = _clamp_int(data.get("steps"), 10, minimum=1, maximum=50)
     threshold = _clamp_float(data.get("threshold"), 0.0, 0.0, 1.0)
     seed = _clamp_int(data.get("seed"), 42)
+    rng = np.random.default_rng(seed)
 
     if input_mode == "custom":
         original = _normalize_custom_pattern(data.get("custom_pattern"))
         selected_name = "Custom"
+        recall_input = original.copy()
+        comparison_middle_label = t("input", lang)
     else:
         original = ALL_PATTERNS[pattern_name]
         selected_name = pattern_name
-
-    rng = np.random.default_rng(seed)
-    corrupted = corrupt(original, noise_level, mask_ratio, rng)
+        recall_input = corrupt(original, noise_level, mask_ratio, rng)
+        comparison_middle_label = None
 
     if update_mode == "synchronous":
-        recalled, history = recall_synchronous(WEIGHT_MATRIX, corrupted, steps, threshold)
+        recalled, history = recall_synchronous(WEIGHT_MATRIX, recall_input, steps, threshold)
     else:
         recalled, history = recall_asynchronous(
             WEIGHT_MATRIX,
-            corrupted,
+            recall_input,
             steps,
             threshold,
             rng,
@@ -199,7 +201,14 @@ def run_recall(payload: dict[str, Any] | None) -> dict[str, Any]:
     }
 
     comparison_image = _figure_to_data_uri(
-        plot_comparison(original, corrupted, recalled, selected_name, lang=lang)
+        plot_comparison(
+            original,
+            recall_input,
+            recalled,
+            selected_name,
+            lang=lang,
+            middle_label=comparison_middle_label,
+        )
     )
     trajectory_image = _figure_to_data_uri(
         plot_recall_history(history, lang=lang)

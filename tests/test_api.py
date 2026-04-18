@@ -63,6 +63,39 @@ def test_custom_recall_returns_neutral_badge():
     assert payload["badge"]["text"].startswith("→ ")
 
 
+def test_custom_recall_ignores_corruption_settings():
+    custom_pattern = [1 if idx % GRID_SIZE == 0 else -1 for idx in range(N_NEURONS)]
+    base_payload = {
+        "lang": "en",
+        "input_mode": "custom",
+        "custom_pattern": custom_pattern,
+        "update_mode": "asynchronous",
+        "steps": 5,
+        "threshold": 0.0,
+        "seed": 7,
+    }
+
+    clean = run_recall(
+        {
+            **base_payload,
+            "noise_level": 0.0,
+            "mask_ratio": 0.0,
+        }
+    )
+    corrupted = run_recall(
+        {
+            **base_payload,
+            "noise_level": 1.0,
+            "mask_ratio": 1.0,
+        }
+    )
+
+    assert corrupted["badge"] == clean["badge"]
+    assert corrupted["metrics"] == clean["metrics"]
+    assert corrupted["summary"] == clean["summary"]
+    assert corrupted["infoLine"] == clean["infoLine"]
+
+
 def test_custom_recall_rejects_invalid_pattern_length():
     with pytest.raises(ValueError):
         run_recall({"input_mode": "custom", "custom_pattern": [1, -1]})

@@ -147,9 +147,11 @@ with st.sidebar:
     st.markdown(f'<p class="section-label">{t("corruption", lang)}</p>',
                 unsafe_allow_html=True)
     noise_level = st.slider(t("noise_level", lang), 0.0, 1.0, 0.15, 0.05,
-                            help=t("noise_help", lang))
+                            help=t("noise_help", lang),
+                            disabled=input_mode == mode_opts[1])
     mask_ratio = st.slider(t("mask_ratio", lang), 0.0, 1.0, 0.0, 0.05,
-                           help=t("mask_help", lang))
+                           help=t("mask_help", lang),
+                           disabled=input_mode == mode_opts[1])
 
     st.markdown("---")
 
@@ -242,9 +244,12 @@ if run_button:
     rng = np.random.default_rng(int(seed))
     if input_mode == mode_opts[0]:
         original = all_patterns[selected_name]
+        corrupted = corrupt(original, noise_level, mask_ratio, rng)
+        comparison_middle_label = None
     else:
         original = custom_pattern
-    corrupted = corrupt(original, noise_level, mask_ratio, rng)
+        corrupted = original.copy()
+        comparison_middle_label = t("input", lang)
 
     if update_mode == mode_options[0]:
         recalled, history = recall_synchronous(W, corrupted, recall_steps, threshold)
@@ -276,7 +281,8 @@ if run_button:
 
     # ── Side-by-side comparison ─────────────────────────────────
     fig_cmp = plot_comparison(original, corrupted, recalled,
-                              selected_name, lang=lang)
+                              selected_name, lang=lang,
+                              middle_label=comparison_middle_label)
     st.pyplot(fig_cmp, use_container_width=True)
 
     # ── Metrics row ─────────────────────────────────────────────

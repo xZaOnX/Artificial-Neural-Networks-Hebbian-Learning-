@@ -57,6 +57,8 @@ export function HebbianDashboard() {
   const deferredCopy = COPY[deferredLang];
   const gridSize = gallery?.gridSize ?? DEFAULT_GRID_SIZE;
   const isBusy = isSubmitting || isTransitioning;
+  const corruptionSummary = inputMode === "stored" ? formatRatio(noiseLevel) : "--";
+  const maskingSummary = inputMode === "stored" ? formatRatio(maskRatio) : "--";
   const summaryItems = [
     {
       label: copy.inputMode,
@@ -72,11 +74,11 @@ export function HebbianDashboard() {
     },
     {
       label: copy.noiseLevel,
-      value: formatRatio(noiseLevel),
+      value: corruptionSummary,
     },
     {
       label: copy.maskRatio,
-      value: formatRatio(maskRatio),
+      value: maskingSummary,
     },
     {
       label: copy.maxRecallSteps,

@@ -30,7 +30,7 @@ export const COPY: Record<Lang, DashboardCopy> = {
     fillGrid: "Fill All",
     drawTitle: "Draw Your Pattern",
     drawHelp:
-      "Toggle cells to set the custom input. Active cells are +1, inactive cells are -1.",
+      "Toggle cells to set the custom input. Active cells are +1, inactive cells are -1, and the drawing is used directly for recall.",
     storedPatterns: "Stored Patterns",
     result: "Recall Result",
     accuracy: "Accuracy",
@@ -83,7 +83,7 @@ export const COPY: Record<Lang, DashboardCopy> = {
     fillGrid: "Tumunu Doldur",
     drawTitle: "Oruntuyu Cizin",
     drawHelp:
-      "Ozel girdiyi ayarlamak icin hucreleri degistirin. Aktif hucreler +1, pasif hucreler -1 olur.",
+      "Ozel girdiyi ayarlamak icin hucreleri degistirin. Aktif hucreler +1, pasif hucreler -1 olur ve cizim dogrudan hatirlama girdisi olarak kullanilir.",
     storedPatterns: "Sakli Oruntuler",
     result: "Hatirlama Sonucu",
     accuracy: "Dogruluk",

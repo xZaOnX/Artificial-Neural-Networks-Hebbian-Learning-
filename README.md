@@ -1,6 +1,6 @@
 # Interactive Noisy Pattern Recall Using Hebbian Learning
 
-An educational demo of **autoassociative memory** built with the **Hebbian (outer-product) learning rule**. The system stores 15 hand-crafted 8×8 bipolar patterns (letters, digits, shapes), corrupts them with noise or masking, and recalls the original pattern through iterative network updates — all exposed through an interactive Streamlit interface.
+An educational demo of **autoassociative memory** built with the **Hebbian (outer-product) learning rule**. The system stores 13 hand-crafted 10×10 bipolar patterns (letters, digits, shapes), corrupts them with noise or masking, and recalls the original pattern through iterative network updates — all exposed through an interactive Streamlit interface.
 
 ---
 
@@ -14,7 +14,7 @@ Demonstrate how a simple neural network can act as a **content-addressable memor
 
 ### 1. Hebbian autoassociative memory
 
-Each pattern is a vector of bipolar values {-1, +1} (64 elements for an 8×8 grid). Storage uses the **Hebb rule**: the weight matrix is the (normalised) sum of outer products of all stored patterns:
+Each pattern is a vector of bipolar values {-1, +1} (100 elements for a 10×10 grid). Storage uses the **Hebb rule**: the weight matrix is the (normalised) sum of outer products of all stored patterns:
 
 ```
 W = (1/N) Σᵢ xᵢ xᵢᵀ
@@ -44,7 +44,7 @@ Both can be combined. The network uses correlations in the weight matrix to reco
 
 ### 4. Capacity and limitations
 
-A network of N neurons can reliably store approximately **0.14 × N** patterns (about 9 for N=64). With 15 stored patterns we intentionally exceed this limit, so you will observe:
+A network of N neurons can reliably store approximately **0.14 × N** patterns (about 14 for N=100). With 13 stored patterns we operate right at this limit, so you may observe:
 
 - **Interference** — similar patterns may confuse the network.
 - **Spurious attractors** — the network may converge to a state that was never stored.
@@ -58,10 +58,9 @@ These failure modes are **educational** — they illustrate fundamental limits o
 
 | Letters | Digits | Shapes   |
 |---------|--------|----------|
-| A E H   | 0 1 2  | square   |
-| K M X   | 3 8    | triangle |
+| A E H X | 0 1 2  | square   |
+|         | 3 8    | triangle |
 |         |        | plus     |
-|         |        | circle   |
 
 All patterns are defined in `patterns.py` and can be easily edited.
 
@@ -137,7 +136,7 @@ python -m pytest tests/ -v
 ```
 app.py             — Streamlit UI and app flow
 hebbian.py         — Weight matrix construction, recall logic
-patterns.py        — Manually defined 8×8 patterns, conversion helpers
+patterns.py        — Manually defined 10×10 patterns, conversion helpers
 noise.py           — Noise injection and masking functions
 visualization.py   — Matplotlib grid-plotting functions
 utils.py           — Small helper utilities
@@ -151,9 +150,9 @@ README.md          — This file
 
 ## Possible future improvements
 
-- Add a **custom pattern editor** in the UI (draw your own 8×8 pattern).
+- Add a **custom pattern editor** in the UI (draw your own 10×10 pattern).
 - Implement the **Storkey learning rule** for higher capacity.
 - Add an **energy landscape** visualisation.
 - Implement **pseudo-inverse** (projection) learning for comparison.
-- Increase grid size to 10×10 or 16×16 for more detailed patterns.
+- Increase grid size to 16×16 for more detailed patterns.
 - Add batch experiments: sweep noise levels and plot recall accuracy curves.

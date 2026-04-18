@@ -68,12 +68,17 @@ def plot_comparison(
     pattern_name: str = "",
     grid_size: int = GRID_SIZE,
     lang: str = "en",
+    middle_label: str | None = None,
 ) -> Figure:
-    """Three side-by-side grids: original → corrupted → recalled."""
+    """Three side-by-side grids: original → input → recalled."""
     fig, axes = plt.subplots(1, 3, figsize=(10, 3.4),
                              gridspec_kw={"wspace": 0.25})
 
-    labels = [t("original", lang), t("corrupted", lang), t("recalled", lang)]
+    labels = [
+        t("original", lang),
+        middle_label or t("corrupted", lang),
+        t("recalled", lang),
+    ]
     data = [original, corrupted, recalled]
 
     for ax, vec, label in zip(axes, data, labels):
