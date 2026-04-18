@@ -15,15 +15,15 @@ from patterns import GRID_SIZE
 from translations import t
 
 # ── Colour palette ──────────────────────────────────────────────────
-# -1 → deep slate,  0 (masked) → muted grey,  +1 → warm amber
-_COLOURS = ["#1e293b", "#64748b", "#f59e0b"]
+# -1 → light grey,  0 (masked) → mid grey,  +1 → forest green
+_COLOURS = ["#e5e3e0", "#a8a5a0", "#166534"]
 _CMAP = mcolors.ListedColormap(_COLOURS)
 _NORM = mcolors.BoundaryNorm([-1.5, -0.5, 0.5, 1.5], _CMAP.N)
 
 # ── Shared figure style ────────────────────────────────────────────
-_BG = "#0e1117"        # matches Streamlit dark theme
-_TEXT = "#e2e8f0"       # light text on dark bg
-_ACCENT = "#f59e0b"     # amber accent
+_BG = "#ffffff"
+_TEXT = "#181110"
+_ACCENT = "#166534"     # forest green
 
 
 def _style_ax(ax: plt.Axes, title: str = "") -> None:
@@ -38,11 +38,10 @@ def _style_ax(ax: plt.Axes, title: str = "") -> None:
 
 
 def _style_fig(fig: Figure) -> None:
-    """Set transparent background so the figure blends into Streamlit."""
-    fig.patch.set_facecolor("none")
-    fig.patch.set_alpha(0)
+    """White background to match the site theme."""
+    fig.patch.set_facecolor("#ffffff")
     for ax in fig.get_axes():
-        ax.set_facecolor("none")
+        ax.set_facecolor("#ffffff")
 
 
 def plot_single_pattern(
@@ -148,11 +147,11 @@ def plot_overlap_bars(
 
     fig, ax = plt.subplots(figsize=(7, max(3, 0.38 * len(names))))
 
-    colours = [_ACCENT if n == highlight else "#475569" for n in names]
+    colours = [_ACCENT if n == highlight else "#d1d0ce" for n in names]
     bars = ax.barh(names, values, color=colours, height=0.65, edgecolor="none")
 
     ax.set_xlim(-1.05, 1.05)
-    ax.axvline(0, color="#334155", linewidth=0.8)
+    ax.axvline(0, color="#e5e3e0", linewidth=0.8)
     ax.set_xlabel(t("overlap", lang), fontsize=10, color=_TEXT)
     ax.tick_params(colors=_TEXT, labelsize=9)
     ax.invert_yaxis()

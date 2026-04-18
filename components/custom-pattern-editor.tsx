@@ -24,99 +24,77 @@ export function CustomPatternEditor({
   const [dragValue, setDragValue] = useState<1 | -1 | null>(null);
 
   useEffect(() => {
-    if (dragValue === null) {
-      return;
-    }
-
-    function stopDragging() {
-      setDragValue(null);
-    }
-
-    window.addEventListener("pointerup", stopDragging);
-    window.addEventListener("pointercancel", stopDragging);
-
+    if (dragValue === null) return;
+    function stop() { setDragValue(null); }
+    window.addEventListener("pointerup", stop);
+    window.addEventListener("pointercancel", stop);
     return () => {
-      window.removeEventListener("pointerup", stopDragging);
-      window.removeEventListener("pointercancel", stopDragging);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
     };
   }, [dragValue]);
 
   function handlePointerDown(index: number) {
-    if (disabled) {
-      return;
-    }
-
-    const nextValue: 1 | -1 = pattern[index] > 0 ? -1 : 1;
-    onSetCell(index, nextValue);
-    setDragValue(nextValue);
+    if (disabled) return;
+    const next: 1 | -1 = pattern[index] > 0 ? -1 : 1;
+    onSetCell(index, next);
+    setDragValue(next);
   }
 
   function handlePointerEnter(index: number) {
-    if (disabled || dragValue === null) {
-      return;
-    }
-
+    if (disabled || dragValue === null) return;
     onSetCell(index, dragValue);
   }
 
   return (
-    <div className="space-y-4 pt-2">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="field-label">{copy.drawTitle}</p>
-          <p className="field-hint mt-1">{copy.drawHelp}</p>
-        </div>
-        <div className="flex w-full gap-2 sm:w-auto">
-          <button
-            type="button"
-            className="secondary-button flex-1 sm:flex-none"
-            disabled={disabled}
-            onClick={onClear}
-          >
-            {copy.clearGrid}
-          </button>
-          <button
-            type="button"
-            className="secondary-button flex-1 sm:flex-none"
-            disabled={disabled}
-            onClick={onFill}
-          >
-            {copy.fillGrid}
-          </button>
-        </div>
-      </div>
-
+    <div className="flex items-start gap-4">
+      {/* Grid */}
       <div
         aria-label={copy.drawTitle}
-        className="grid gap-1 rounded-[20px] border border-[rgb(var(--border-subtle))] bg-[rgb(var(--surface-tertiary))] p-2 select-none sm:gap-2 sm:rounded-[24px] sm:p-3"
-        style={{ gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))` }}
+        className="select-none border"
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+          gap: "2px",
+          padding: "4px",
+          borderColor: "rgb(var(--border))",
+          background: "rgb(var(--surface-dim))",
+        }}
       >
         {pattern.map((value, index) => {
           const isActive = value > 0;
-
           return (
             <button
               key={index}
               type="button"
               aria-pressed={isActive}
               disabled={disabled}
-              onPointerDown={(event) => {
-                event.preventDefault();
-                handlePointerDown(index);
-              }}
+              onPointerDown={(e) => { e.preventDefault(); handlePointerDown(index); }}
               onPointerEnter={() => handlePointerEnter(index)}
               onPointerUp={() => setDragValue(null)}
+              style={{ width: 18, height: 18, touchAction: "none" }}
               className={[
-                "aspect-square touch-none rounded-md border transition duration-150 focus:outline-none focus:ring-4 focus:ring-[rgba(37,99,235,0.16)] disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-lg",
+                "border transition-colors duration-75 focus:outline-none disabled:cursor-not-allowed",
                 isActive
-                  ? "border-[rgba(37,99,235,0.52)] bg-[linear-gradient(135deg,rgba(37,99,235,0.94),rgba(30,64,175,0.96))] shadow-[0_10px_20px_rgba(37,99,235,0.2)]"
-                  : "border-[rgb(var(--border-subtle))] bg-white hover:border-[rgba(37,99,235,0.3)] hover:bg-[rgba(255,255,255,0.94)]",
+                  ? "border-[rgb(var(--accent))] bg-[rgb(var(--accent))]"
+                  : "border-[rgb(var(--border))] bg-white hover:bg-[rgb(var(--accent-light))]",
               ].join(" ")}
             >
-              <span className="sr-only">{`${copy.drawTitle} ${index + 1}`}</span>
+              <span className="sr-only">{index + 1}</span>
             </button>
           );
         })}
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-col gap-2 pt-1">
+        <p className="text-xs text-[rgb(var(--text-muted))]">{copy.drawHelp}</p>
+        <button type="button" className="secondary-button" disabled={disabled} onClick={onClear}>
+          {copy.clearGrid}
+        </button>
+        <button type="button" className="secondary-button" disabled={disabled} onClick={onFill}>
+          {copy.fillGrid}
+        </button>
       </div>
     </div>
   );
