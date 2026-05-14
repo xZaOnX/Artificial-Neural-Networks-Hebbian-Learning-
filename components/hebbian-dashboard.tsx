@@ -134,6 +134,17 @@ export function HebbianDashboard() {
     startTransition(() => setInputMode(nextMode));
   }
 
+  function handleEditPattern() {
+    const target = gallery?.patterns[selectedPattern];
+    if (!target) return;
+    startTransition(() => {
+      setCustomPattern([...target]);
+      setInputMode("custom");
+      setNoiseLevel(0);
+      setMaskRatio(0);
+    });
+  }
+
   function handleSetCustomCell(index: number, value: 1 | -1) {
     setCustomPattern((current) => {
       if (current[index] === value) return current;
@@ -187,6 +198,7 @@ export function HebbianDashboard() {
         onSetCustomCell={handleSetCustomCell}
         onClearCustomPattern={() => setCustomPattern(createPattern(gridSize * gridSize, -1))}
         onFillCustomPattern={() => setCustomPattern(createPattern(gridSize * gridSize, 1))}
+        onEditPattern={handleEditPattern}
         onSubmit={() => void submitRecall()}
       />
 

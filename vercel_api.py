@@ -130,6 +130,9 @@ def get_gallery_payload(lang: str = "en") -> dict[str, Any]:
         "defaultPattern": DEFAULT_PATTERN,
         "patternNames": PATTERN_NAMES,
         "patternCount": len(PATTERN_NAMES),
+        "patterns": {
+            name: ALL_PATTERNS[name].tolist() for name in PATTERN_NAMES
+        },
         "galleryCaption": t(
             "pattern_count",
             normalized_lang,
