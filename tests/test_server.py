@@ -1,7 +1,3 @@
-"""
-tests/test_server.py — smoke tests for the Vercel Flask entrypoint.
-"""
-
 from server import app
 
 

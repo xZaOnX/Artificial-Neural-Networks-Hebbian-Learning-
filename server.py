@@ -1,11 +1,9 @@
 """
 Flask entrypoint for Vercel deployment.
-
-The original Streamlit interface remains in app.py for local usage.
-Vercel serves this Flask app because it supports WSGI-style Python apps.
+The Streamlit interface remains in app.py for local usage.
 """
 
-from __future__ import annotations  # enables X | Y union syntax on Python 3.9
+from __future__ import annotations
 
 import base64
 import io

@@ -1,7 +1,3 @@
-"""
-tests/test_api.py — smoke tests for the Vercel Python API helpers.
-"""
-
 import pytest
 
 from api.gallery import app as gallery_app

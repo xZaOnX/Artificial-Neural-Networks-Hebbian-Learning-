@@ -146,7 +146,7 @@ export function HebbianDashboard() {
   return (
     <div className="flex min-h-screen flex-col">
 
-      {/* Slim title bar */}
+
       <div
         className="flex items-center border-b px-6 py-3"
         style={{ borderColor: "rgb(var(--border))" }}
@@ -159,7 +159,7 @@ export function HebbianDashboard() {
         </span>
       </div>
 
-      {/* Horizontal controls bar */}
+
       <ControlPanel
         copy={copy}
         lang={lang}
@@ -190,7 +190,7 @@ export function HebbianDashboard() {
         onSubmit={() => void submitRecall()}
       />
 
-      {/* Results — full width */}
+
       <div ref={resultsRef} className="flex-1">
         <ResultsPanel
           copy={copy}
@@ -200,7 +200,7 @@ export function HebbianDashboard() {
         />
       </div>
 
-      {/* Pattern gallery */}
+
       <div className="border-t" style={{ borderColor: "rgb(var(--border))" }}>
         <PatternGallery
           copy={copy}
@@ -210,7 +210,7 @@ export function HebbianDashboard() {
         />
       </div>
 
-      {/* How it works */}
+
       <div className="border-t px-6 py-8 sm:px-10" style={{ borderColor: "rgb(var(--border))" }}>
         <p className="section-label mb-6">{copy.howItWorks}</p>
         <div className="grid gap-8 lg:grid-cols-3">

@@ -71,12 +71,12 @@ export function ControlPanel({
 
   return (
     <div>
-      {/* Horizontal controls bar */}
+
       <div
         className="flex flex-wrap items-center gap-x-5 gap-y-4 border-b px-6 py-4"
         style={{ borderColor: "rgb(var(--border))" }}
       >
-        {/* Language */}
+
         <div className="segmented grid-cols-2">
           {(["en", "tr"] as const).map((v) => (
             <button key={v} type="button" disabled={isBusy}
@@ -90,7 +90,7 @@ export function ControlPanel({
 
         <div style={vr} />
 
-        {/* Input mode */}
+
         <div className="segmented grid-cols-2">
           <button type="button" disabled={isBusy}
             data-state={inputMode === "stored" ? "active" : "inactive"}
@@ -106,7 +106,7 @@ export function ControlPanel({
           </button>
         </div>
 
-        {/* Pattern select */}
+
         <select
           className="input-base w-auto py-2 text-sm"
           disabled={isBusy || inputMode === "custom" || patternNames.length === 0}
@@ -118,7 +118,7 @@ export function ControlPanel({
 
         <div style={vr} />
 
-        {/* Noise */}
+
         <SliderField
           id="noise-level" label={copy.noiseLevel}
           min={0} max={1} step={0.05} value={noiseLevel}
@@ -126,7 +126,7 @@ export function ControlPanel({
           onChange={onNoiseLevelChange}
         />
 
-        {/* Mask */}
+
         <SliderField
           id="mask-ratio" label={copy.maskRatio}
           min={0} max={1} step={0.05} value={maskRatio}
@@ -136,7 +136,7 @@ export function ControlPanel({
 
         <div style={vr} />
 
-        {/* Update mode */}
+
         <div className="segmented grid-cols-2">
           <button type="button" disabled={isBusy}
             data-state={updateMode === "synchronous" ? "active" : "inactive"}
@@ -152,7 +152,7 @@ export function ControlPanel({
           </button>
         </div>
 
-        {/* Steps */}
+
         <SliderField
           id="steps" label={copy.maxRecallSteps}
           min={1} max={50} step={1} value={steps}
@@ -160,7 +160,7 @@ export function ControlPanel({
           onChange={onStepsChange}
         />
 
-        {/* Threshold */}
+
         <SliderField
           id="threshold" label={copy.activationThreshold}
           min={0} max={1} step={0.05} value={threshold}
@@ -170,7 +170,7 @@ export function ControlPanel({
 
         <div style={vr} />
 
-        {/* Seed */}
+
         <div className="flex items-center gap-2.5">
           <label htmlFor="seed" className="shrink-0 text-sm text-[rgb(var(--text-secondary))]">
             {copy.randomSeed}
@@ -185,7 +185,7 @@ export function ControlPanel({
 
         <div style={vr} />
 
-        {/* Run */}
+
         <button
           type="button"
           className="primary-button w-auto min-w-[120px] py-2 text-sm"
@@ -196,7 +196,7 @@ export function ControlPanel({
         </button>
       </div>
 
-      {/* Custom pattern editor — shown below bar when active */}
+
       {inputMode === "custom" && (
         <div className="border-b px-6 py-4" style={{ borderColor: "rgb(var(--border))" }}>
           <CustomPatternEditor

@@ -64,7 +64,7 @@ export function ResultsPanel({ copy, result, isSubmitting, error }: ResultsPanel
             style={{ borderColor: "rgb(var(--border))" }}
           />
 
-          {/* Metrics — plain row, no boxes */}
+
           <div
             className="grid grid-cols-2 gap-x-8 gap-y-4 border-y py-4 sm:grid-cols-4"
             style={{ borderColor: "rgb(var(--border-subtle))" }}
@@ -88,7 +88,7 @@ export function ResultsPanel({ copy, result, isSubmitting, error }: ResultsPanel
 
           <p className="text-xs text-[rgb(var(--text-muted))]">{result.infoLine}</p>
 
-          {/* Tabs */}
+
           <div>
             <div
               className="mb-4 flex gap-1 border-b pb-1"

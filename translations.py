@@ -1,10 +1,9 @@
 """
-translations.py — Turkish / English UI strings for the Streamlit app.
+Turkish / English UI strings.
 """
 
 TRANSLATIONS = {
     "en": {
-        # Page
         "page_title": "Hebbian Pattern Recall",
         "title": "Hebbian Pattern Recall",
         "subtitle": "Interactive Noisy Pattern Recall Using Hebbian Learning",
@@ -14,7 +13,6 @@ TRANSLATIONS = {
             "any stored pattern with noise or masking, then observe the network "
             "reconstruct the original through iterative recall."
         ),
-        # Sidebar
         "language": "Language",
         "controls": "Controls",
         "pattern": "Pattern",
@@ -32,12 +30,10 @@ TRANSLATIONS = {
         "random_seed": "Seed",
         "run_recall": "Run Recall",
         "running": "Running recall...",
-        # Stored patterns
         "view_all_patterns": "Stored Patterns",
         "stored_patterns_title": "Stored patterns",
         "pattern_count": "{n} patterns stored in {neurons}-neuron network (capacity ~{cap})",
         "parameter_notice": "Some values were reset to safe defaults.",
-        # Results
         "result": "Recall Result",
         "accuracy": "Accuracy",
         "errors": "Bit Errors",
@@ -48,7 +44,6 @@ TRANSLATIONS = {
         "energy_label": "Energy: {energy:.2f}",
         "success": "Correct recall",
         "failure": "Recall failed",
-        # Plots
         "original": "Original",
         "input": "Input",
         "corrupted": "Corrupted",
@@ -56,11 +51,9 @@ TRANSLATIONS = {
         "pattern_label": "Pattern: {name}",
         "step": "t={i}",
         "recall_trajectory_title": "Recall trajectory",
-        # Expanders
         "recall_trajectory": "Recall Trajectory",
         "overlap_all": "Overlap with All Patterns",
         "how_it_works": "How It Works",
-        # Custom pattern editor
         "input_mode": "Input Mode",
         "stored_pattern": "Stored Pattern",
         "draw_custom": "Draw Custom",
@@ -96,7 +89,6 @@ in the weight matrix.
 """,
     },
     "tr": {
-        # Sayfa
         "page_title": "Hebbian Oruntu Hatirlama",
         "title": "Hebbian Oruntu Hatirlama",
         "subtitle": "Hebbian Ogrenme ile Etkilesimli Gurultulu Oruntu Hatirlama",
@@ -106,7 +98,6 @@ in the weight matrix.
             "bir oruntuyu gurultu veya maskeleme ile bozabilir, ardindan agin iteratif "
             "guncellemelerle orijinali yeniden olusturmasini gozlemleyebilirsiniz."
         ),
-        # Kenar cubugu
         "language": "Dil",
         "controls": "Kontroller",
         "pattern": "Oruntu",
@@ -124,12 +115,10 @@ in the weight matrix.
         "random_seed": "Tohum",
         "run_recall": "Hatirla",
         "running": "Hatirlama calisiyor...",
-        # Sakli oruntüler
         "view_all_patterns": "Sakli Oruntuler",
         "stored_patterns_title": "Sakli oruntuler",
         "pattern_count": "{neurons} noronlu agda {n} oruntu sakli (kapasite ~{cap})",
         "parameter_notice": "Bazi alanlar guvenli varsayilanlara sifirlandi.",
-        # Sonuclar
         "result": "Hatirlama Sonucu",
         "accuracy": "Dogruluk",
         "errors": "Bit Hatasi",
@@ -140,7 +129,6 @@ in the weight matrix.
         "energy_label": "Enerji: {energy:.2f}",
         "success": "Dogru hatirlama",
         "failure": "Hatirlama basarisiz",
-        # Grafikler
         "original": "Orijinal",
         "input": "Girdi",
         "corrupted": "Bozulmus",
@@ -148,11 +136,9 @@ in the weight matrix.
         "pattern_label": "Oruntu: {name}",
         "step": "t={i}",
         "recall_trajectory_title": "Hatirlama yorungesi",
-        # Genisletilebilir bolumler
         "recall_trajectory": "Hatirlama Yorungesi",
         "overlap_all": "Tum Oruntulerle Ortusme",
         "how_it_works": "Nasil Calisiyor?",
-        # Ozel oruntu editoru
         "input_mode": "Girdi Modu",
         "stored_pattern": "Sakli Oruntu",
         "draw_custom": "Ozel Ciz",
@@ -190,7 +176,7 @@ Ag, agirlik matrisinde yakalanan korelasyonlari kullanarak eksik bilgiyi tamamla
 
 
 def t(key: str, lang: str = "en", **kwargs) -> str:
-    """Look up a translated string and format it with kwargs if provided."""
+    """Look up a translated string, format with kwargs if provided."""
     text = TRANSLATIONS[lang][key]
     if kwargs:
         return text.format(**kwargs)

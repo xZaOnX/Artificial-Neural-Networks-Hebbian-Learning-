@@ -1,10 +1,3 @@
-"""
-tests/test_hebbian.py — Basic tests for the Hebbian memory system.
-
-Run with:
-    python -m pytest tests/ -v
-"""
-
 import numpy as np
 import pytest
 
@@ -26,10 +19,6 @@ from hebbian import (
 from noise import add_noise, apply_masking, corrupt
 
 
-# ───────────────────────────────────────────────────────────────────
-# Pattern conversion
-# ───────────────────────────────────────────────────────────────────
-
 class TestPatterns:
     def test_bipolar_values(self):
         vec = pattern_to_bipolar(PATTERN_CATALOG["A"])
@@ -50,10 +39,6 @@ class TestPatterns:
         assert len(PATTERN_CATALOG) >= 12, "Need at least 12 patterns"
 
 
-# ───────────────────────────────────────────────────────────────────
-# Weight matrix
-# ───────────────────────────────────────────────────────────────────
-
 class TestWeightMatrix:
     def setup_method(self):
         self.P, self.names = get_pattern_matrix()
@@ -73,13 +58,8 @@ class TestWeightMatrix:
 
     def test_nonzero_diagonal_option(self):
         W = build_weight_matrix(self.P, zero_diagonal=False)
-        # Diagonal should be non-zero (sum of squares / N)
         assert not np.allclose(np.diag(W), 0.0)
 
-
-# ───────────────────────────────────────────────────────────────────
-# Recall
-# ───────────────────────────────────────────────────────────────────
 
 class TestRecall:
     def setup_method(self):
@@ -87,12 +67,7 @@ class TestRecall:
         self.W = build_weight_matrix(self.P)
 
     def test_clean_recall_synchronous(self):
-        """Clean recall: most patterns should recall well above chance.
-
-        With 15 patterns in 64 neurons we exceed Hopfield capacity (~9),
-        so some patterns will suffer from interference.  We check that
-        *most* (at least 60%) patterns recall with overlap > 0.5.
-        """
+        """Most patterns should recall well above chance."""
         good = 0
         for i, name in enumerate(self.names):
             pattern = self.P[:, i]
@@ -104,7 +79,7 @@ class TestRecall:
         assert ratio >= 0.6, f"Only {good}/{len(self.names)} patterns recalled well"
 
     def test_small_set_clean_recall(self):
-        """With few distinct patterns (within capacity) clean recall is good."""
+        """Within capacity, clean recall should be good."""
         pick = ["X", "1", "3", "square", "plus"]
         indices = [self.names.index(n) for n in pick]
         P_small = self.P[:, indices]
@@ -116,7 +91,7 @@ class TestRecall:
             assert ovlp > 0.85, f"{name}: overlap {ovlp:.3f} too low"
 
     def test_noisy_recall_small_set(self):
-        """Light noise (10%) with a small distinct set should recall correctly."""
+        """Light noise (10%) with a small set should recall correctly."""
         pick = ["X", "1", "3", "square", "plus"]
         indices = [self.names.index(n) for n in pick]
         P_small = self.P[:, indices]
@@ -142,17 +117,13 @@ class TestRecall:
         assert len(history) >= 1
 
 
-# ───────────────────────────────────────────────────────────────────
-# Noise / masking
-# ───────────────────────────────────────────────────────────────────
-
 class TestNoise:
     def test_noise_flips_correct_count(self):
         rng = np.random.default_rng(0)
         vec = np.ones(64)
         noisy = add_noise(vec, 0.25, rng)
         flipped = int(np.sum(vec != noisy))
-        assert flipped == 16  # 25% of 64
+        assert flipped == 16
 
     def test_masking_zeros_correct_count(self):
         rng = np.random.default_rng(0)
@@ -167,10 +138,6 @@ class TestNoise:
         result = corrupt(vec, noise_level=0.1, mask_ratio=0.1, rng=rng)
         assert result.shape == vec.shape
 
-
-# ───────────────────────────────────────────────────────────────────
-# Utility functions
-# ───────────────────────────────────────────────────────────────────
 
 class TestHelpers:
     def test_overlap_identical(self):

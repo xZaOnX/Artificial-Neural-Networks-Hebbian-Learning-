@@ -48,7 +48,7 @@ export function CustomPatternEditor({
 
   return (
     <div className="flex items-start gap-4">
-      {/* Grid */}
+
       <div
         aria-label={copy.drawTitle}
         className="select-none border"
@@ -86,7 +86,7 @@ export function CustomPatternEditor({
         })}
       </div>
 
-      {/* Controls */}
+
       <div className="flex flex-col gap-2 pt-1">
         <p className="text-xs text-[rgb(var(--text-muted))]">{copy.drawHelp}</p>
         <button type="button" className="secondary-button" disabled={disabled} onClick={onClear}>

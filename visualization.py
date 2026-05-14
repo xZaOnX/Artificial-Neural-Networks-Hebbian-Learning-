@@ -1,11 +1,8 @@
 """
-visualization.py — Matplotlib helpers for displaying 10x10 bipolar grids.
-
-Uses a dark theme with a curated colour palette for a polished look
-when embedded in the Streamlit app.
+Matplotlib helpers for displaying 10x10 bipolar grids.
 """
 
-from __future__ import annotations  # enables X | Y union syntax on Python 3.9
+from __future__ import annotations
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,20 +11,17 @@ from matplotlib.figure import Figure
 from patterns import GRID_SIZE
 from translations import t
 
-# ── Colour palette ──────────────────────────────────────────────────
-# -1 → light grey,  0 (masked) → mid grey,  +1 → forest green
+# -1 -> light grey, 0 (masked) -> mid grey, +1 -> forest green
 _COLOURS = ["#e5e3e0", "#a8a5a0", "#166534"]
 _CMAP = mcolors.ListedColormap(_COLOURS)
 _NORM = mcolors.BoundaryNorm([-1.5, -0.5, 0.5, 1.5], _CMAP.N)
 
-# ── Shared figure style ────────────────────────────────────────────
 _BG = "#ffffff"
 _TEXT = "#181110"
-_ACCENT = "#166534"     # forest green
+_ACCENT = "#166534"
 
 
 def _style_ax(ax: plt.Axes, title: str = "") -> None:
-    """Apply consistent styling to a single grid axes."""
     ax.set_xticks([])
     ax.set_yticks([])
     for spine in ax.spines.values():
@@ -38,7 +32,6 @@ def _style_ax(ax: plt.Axes, title: str = "") -> None:
 
 
 def _style_fig(fig: Figure) -> None:
-    """White background to match the site theme."""
     fig.patch.set_facecolor("#ffffff")
     for ax in fig.get_axes():
         ax.set_facecolor("#ffffff")
@@ -69,7 +62,7 @@ def plot_comparison(
     lang: str = "en",
     middle_label: str | None = None,
 ) -> Figure:
-    """Three side-by-side grids: original → input → recalled."""
+    """Three side-by-side grids: original -> input -> recalled."""
     fig, axes = plt.subplots(1, 3, figsize=(10, 3.4),
                              gridspec_kw={"wspace": 0.25})
 
@@ -93,7 +86,7 @@ def plot_recall_history(
     max_show: int = 8,
     lang: str = "en",
 ) -> Figure:
-    """Show the recall trajectory (state snapshots)."""
+    """Show the recall trajectory as state snapshots."""
     n = len(history)
     indices = list(range(n)) if n <= max_show else \
               np.linspace(0, n - 1, max_show, dtype=int).tolist()

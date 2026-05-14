@@ -3,7 +3,7 @@
 
 **Student:** Ozan Oneyman  
 **Date:** April 2026  
-**YouTube Video:** [ADD LINK HERE]
+**YouTube Video:** [https://youtu.be/Hk--XBRxkQw](https://youtu.be/Hk--XBRxkQw)
 
 ---
 
@@ -99,4 +99,3 @@ The Hebbian autoassociative memory successfully demonstrates content-addressable
 
 ---
 
-*Code repository: [GitHub link] | Video: [YouTube link]*

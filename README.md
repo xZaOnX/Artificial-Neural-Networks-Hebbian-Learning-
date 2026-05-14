@@ -1,6 +1,8 @@
 # Interactive Noisy Pattern Recall Using Hebbian Learning
 
-An educational demo of **autoassociative memory** built with the **Hebbian (outer-product) learning rule**. The system stores 13 hand-crafted 10×10 bipolar patterns (letters, digits, shapes), corrupts them with noise or masking, and recalls the original pattern through iterative network updates — all exposed through an interactive Streamlit interface.
+An educational demo of **autoassociative memory** built with the **Hebbian (outer-product) learning rule**. The system stores 12 hand-crafted 10x10 bipolar patterns (letters, digits, shapes), corrupts stored patterns with noise or masking, and recalls the closest learned pattern through iterative network updates.
+
+The current app is a **Next.js frontend** backed by small **Python Flask JSON APIs**. The Python backend performs the Hebbian memory computation and returns metrics plus Matplotlib-generated visualizations.
 
 ---
 
@@ -14,43 +16,43 @@ Demonstrate how a simple neural network can act as a **content-addressable memor
 
 ### 1. Hebbian autoassociative memory
 
-Each pattern is a vector of bipolar values {-1, +1} (100 elements for a 10×10 grid). Storage uses the **Hebb rule**: the weight matrix is the (normalised) sum of outer products of all stored patterns:
+Each pattern is a vector of bipolar values `{-1, +1}` with 100 elements for a 10x10 grid. Storage uses the **Hebb rule**: the weight matrix is the normalized sum of outer products of all stored patterns:
 
-```
+```text
 W = (1/N) Σᵢ xᵢ xᵢᵀ
 ```
 
-The diagonal of W is set to zero to prevent self-reinforcement.
+The diagonal of `W` is set to zero to prevent self-reinforcement.
 
 ### 2. Recall
 
-Given a noisy input **s**, the network iteratively updates:
+Given a noisy input `s`, the network iteratively updates:
 
-```
+```text
 s(t+1) = sign(W · s(t))
 ```
 
-until convergence. Two update modes are available:
+until convergence or until the configured maximum step count is reached. Two update modes are available:
 
-- **Synchronous** — all neurons update at once each step.
-- **Asynchronous** — neurons update one at a time in random order, seeing the latest values immediately.
+- **Synchronous**: all neurons update at once each step.
+- **Asynchronous**: neurons update one at a time in random order, using the latest state immediately.
 
 ### 3. Noise and masking
 
-- **Noise**: randomly flips a fraction of cells (+1 ↔ -1).
-- **Masking**: zeroes out a fraction of cells (representing missing data).
+- **Noise**: randomly flips a fraction of cells (`+1 <-> -1`).
+- **Masking**: zeroes out a fraction of cells to represent missing data.
 
 Both can be combined. The network uses correlations in the weight matrix to reconstruct the original pattern.
 
 ### 4. Capacity and limitations
 
-A network of N neurons can reliably store approximately **0.14 × N** patterns (about 14 for N=100). With 13 stored patterns we operate right at this limit, so you may observe:
+A network of `N` neurons can reliably store approximately **0.14 x N** patterns. For this project, `N = 100`, so the approximate capacity is 14 patterns. With 12 stored patterns, the network operates close to that limit, so you may observe:
 
-- **Interference** — similar patterns may confuse the network.
-- **Spurious attractors** — the network may converge to a state that was never stored.
-- **Partial recall** — the recalled pattern may be a mixture of stored patterns.
+- **Interference**: similar patterns may confuse the network.
+- **Spurious attractors**: the network may converge to a state that was never stored.
+- **Partial recall**: the recalled pattern may be a mixture of stored patterns.
 
-These failure modes are **educational** — they illustrate fundamental limits of Hopfield / Hebbian networks.
+These failure modes are educational: they illustrate fundamental limits of Hopfield / Hebbian networks.
 
 ---
 
@@ -62,97 +64,187 @@ These failure modes are **educational** — they illustrate fundamental limits o
 |         | 3 8    | triangle |
 |         |        | plus     |
 
-All patterns are defined in `patterns.py` and can be easily edited.
+All patterns are defined in `patterns.py`.
+
+---
+
+## Current architecture
+
+```text
+Next.js UI
+  app/page.tsx
+  components/hebbian-dashboard.tsx
+  components/control-panel.tsx
+  components/custom-pattern-editor.tsx
+  components/results-panel.tsx
+  components/pattern-gallery.tsx
+
+Python API / computation
+  api/gallery.py          GET /api/gallery
+  api/recall.py           POST /api/recall
+  local_api_server.py     local Flask API used during development
+  vercel_api.py           shared API payload and recall logic
+  hebbian.py              weight matrix construction and recall rules
+  patterns.py             stored 10x10 patterns
+  noise.py                noise and masking helpers
+  visualization.py        Matplotlib plots returned as base64 PNG data URIs
+  utils.py                metrics such as accuracy and energy
+```
+
+There are also two legacy/local interfaces:
+
+- `app.py`: original Streamlit UI.
+- `server.py` plus `templates/index.html`: standalone Flask-rendered HTML UI.
+
+The primary app path is now the Next.js frontend with Python JSON API endpoints.
 
 ---
 
 ## Installation
 
-```bash
-# 1. Create a virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate        # macOS/Linux
-# venv\Scripts\activate         # Windows
+Install Python dependencies:
 
-# 2. Install dependencies
+```bash
+python -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
+```
+
+Install Node dependencies:
+
+```bash
+npm install
+```
+
+`npm run dev` assumes the virtual environment exists at `./venv`.
+
+---
+
+## Running the app locally
+
+Start the local Python API and Next.js frontend together:
+
+```bash
+npm run dev
+```
+
+This runs:
+
+- `local_api_server.py` on `http://127.0.0.1:5328`
+- `next dev` for the frontend
+
+In development, `next.config.js` rewrites `/api/*` requests to the local Flask API.
+
+You can also run the two processes separately:
+
+```bash
+npm run dev:api
+npm run dev:web
 ```
 
 ---
 
-## Running the app
+## Using the app
 
-```bash
-streamlit run app.py
+1. Choose **Stored Pattern** or **Draw Custom**.
+2. For stored patterns, select a pattern and set noise/masking values.
+3. Choose synchronous or asynchronous recall.
+4. Set max steps, activation threshold, and random seed.
+5. Click **Run Recall**.
+6. Review the comparison image, accuracy, bit errors, overlap, nearest stored pattern, recall trajectory, and overlap chart.
+
+---
+
+## API endpoints
+
+### `GET /api/gallery`
+
+Returns stored-pattern metadata and a base64 gallery image.
+
+Optional query parameter:
+
+- `lang`: `en` or `tr`
+
+### `POST /api/recall`
+
+Runs recall and returns metrics plus visualization images.
+
+Example payload:
+
+```json
+{
+  "lang": "en",
+  "input_mode": "stored",
+  "pattern": "A",
+  "noise_level": 0.2,
+  "mask_ratio": 0,
+  "update_mode": "synchronous",
+  "steps": 10,
+  "threshold": 0,
+  "seed": 42
+}
 ```
 
-The app opens in your browser. Use the sidebar to:
+For custom input, set `input_mode` to `custom` and provide `custom_pattern` as a flat 100-cell array. Positive values map to `+1`; zero and negative values map to `-1`.
 
-1. Select a stored pattern.
-2. Set noise level and masking ratio.
-3. Choose update mode, recall steps, and threshold.
-4. Click **Run recall** to see the result.
+---
 
 ## Vercel deployment
 
-This repo now includes a Vercel-compatible Flask entrypoint in `server.py`.
-The original Streamlit interface in `app.py` is still the local-first UI, but
-Vercel uses the Flask app because it supports WSGI-style Python deployments.
+The project is configured as a Next.js app with Python serverless functions:
 
-```bash
-# Preview the Vercel entrypoint locally
-python -m flask --app server run
-```
+- `vercel.json` sets `"framework": "nextjs"`.
+- `api/gallery.py` serves the gallery endpoint.
+- `api/recall.py` serves the recall endpoint.
+- `vercel_api.py` contains shared API logic used by both endpoints.
 
-Deployment notes:
-
-- `pyproject.toml` points Vercel at `server:app`.
-- `server.py` exports the Flask `app` used by Vercel.
-- `requirements.txt` includes `Flask` alongside the existing scientific stack.
+`server.py` is still useful as a standalone Flask-rendered UI, but it is not the current Vercel entrypoint.
 
 ---
 
 ## Running tests
 
+The current `requirements.txt` contains runtime dependencies. If `pytest` is not already installed in your virtual environment, install it before running the Python tests.
+
 ```bash
-python -m pytest tests/ -v
+./venv/bin/python -m pytest tests -q
+npm run build
 ```
 
----
-
-## Example usage
-
-1. Select pattern **"A"**.
-2. Set noise level to **0.20** (20% of cells flipped).
-3. Leave masking at 0.
-4. Click **Run recall**.
-5. Observe the original, corrupted, and recalled grids side by side.
-6. Increase noise to 0.40 and notice that recall starts failing.
+The Python tests cover the Hebbian core, corruption helpers, API helpers, local API routes, and the standalone Flask HTML route. The Next.js build verifies TypeScript and production compilation.
 
 ---
 
 ## Project structure
 
-```
-app.py             — Streamlit UI and app flow
-hebbian.py         — Weight matrix construction, recall logic
-patterns.py        — Manually defined 10×10 patterns, conversion helpers
-noise.py           — Noise injection and masking functions
-visualization.py   — Matplotlib grid-plotting functions
-utils.py           — Small helper utilities
-tests/
-  test_hebbian.py  — Unit tests for core logic
-requirements.txt   — Python dependencies
-README.md          — This file
+```text
+app/                  Next.js app router files
+components/           React UI components
+lib/                  TypeScript copy and response types
+api/                  Vercel Python serverless endpoints
+templates/            Legacy Flask HTML template
+tests/                Python test suite
+app.py                Legacy Streamlit UI
+server.py             Standalone Flask-rendered HTML UI
+local_api_server.py   Local Flask JSON API for Next.js development
+vercel_api.py         Shared gallery and recall API logic
+hebbian.py            Weight matrix construction and recall logic
+patterns.py           Stored 10x10 patterns and conversion helpers
+noise.py              Noise injection and masking functions
+visualization.py      Matplotlib visualization helpers
+utils.py              Small metric helpers
+requirements.txt      Python runtime dependencies
+package.json          Node scripts and frontend dependencies
+vercel.json           Vercel deployment configuration
 ```
 
 ---
 
 ## Possible future improvements
 
-- Add a **custom pattern editor** in the UI (draw your own 10×10 pattern).
-- Implement the **Storkey learning rule** for higher capacity.
-- Add an **energy landscape** visualisation.
-- Implement **pseudo-inverse** (projection) learning for comparison.
-- Increase grid size to 16×16 for more detailed patterns.
-- Add batch experiments: sweep noise levels and plot recall accuracy curves.
+- Add automated frontend tests for the dashboard flow.
+- Add batch experiments that sweep noise levels and plot recall accuracy curves.
+- Add an energy landscape visualization.
+- Implement the Storkey learning rule for higher capacity.
+- Implement pseudo-inverse projection learning for comparison.
+- Increase grid size to 16x16 for more detailed patterns.

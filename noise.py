@@ -1,5 +1,5 @@
 """
-noise.py — Functions to corrupt bipolar pattern vectors with noise or masking.
+Functions to corrupt bipolar pattern vectors with noise or masking.
 """
 
 import numpy as np
@@ -10,21 +10,7 @@ def add_noise(
     noise_level: float,
     rng: np.random.Generator | None = None,
 ) -> np.ndarray:
-    """Flip a fraction of cells in a bipolar vector.
-
-    Parameters
-    ----------
-    vector : np.ndarray, shape (N,)
-        Original bipolar vector with values in {-1, +1}.
-    noise_level : float
-        Fraction of cells to flip, in [0, 1].  0 = no noise, 1 = all flipped.
-    rng : np.random.Generator or None
-
-    Returns
-    -------
-    corrupted : np.ndarray, shape (N,)
-        Copy of the vector with some cells inverted.
-    """
+    """Flip a fraction of cells in a bipolar vector."""
     if rng is None:
         rng = np.random.default_rng()
 
@@ -34,7 +20,7 @@ def add_noise(
 
     if n_flip > 0:
         indices = rng.choice(N, size=n_flip, replace=False)
-        corrupted[indices] *= -1  # flip selected cells
+        corrupted[indices] *= -1
 
     return corrupted
 
@@ -44,22 +30,7 @@ def apply_masking(
     mask_ratio: float,
     rng: np.random.Generator | None = None,
 ) -> np.ndarray:
-    """Set a fraction of cells to zero (unknown / missing).
-
-    Zeroed cells are ambiguous — they carry no information and the recall
-    process must reconstruct them from context.
-
-    Parameters
-    ----------
-    vector : np.ndarray, shape (N,)
-    mask_ratio : float
-        Fraction of cells to zero out, in [0, 1].
-    rng : np.random.Generator or None
-
-    Returns
-    -------
-    masked : np.ndarray, shape (N,)
-    """
+    """Set a fraction of cells to zero (unknown/missing)."""
     if rng is None:
         rng = np.random.default_rng()
 
@@ -69,7 +40,7 @@ def apply_masking(
 
     if n_mask > 0:
         indices = rng.choice(N, size=n_mask, replace=False)
-        masked[indices] = 0.0  # zero = unknown
+        masked[indices] = 0.0
 
     return masked
 
@@ -80,22 +51,7 @@ def corrupt(
     mask_ratio: float = 0.0,
     rng: np.random.Generator | None = None,
 ) -> np.ndarray:
-    """Apply noise AND masking in sequence.
-
-    Noise flipping is applied first, then masking.  This means some of
-    the flipped cells may also be masked (set to zero).
-
-    Parameters
-    ----------
-    vector : np.ndarray
-    noise_level : float
-    mask_ratio : float
-    rng : np.random.Generator or None
-
-    Returns
-    -------
-    corrupted : np.ndarray
-    """
+    """Apply noise then masking in sequence."""
     if rng is None:
         rng = np.random.default_rng()
 
