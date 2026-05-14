@@ -28,6 +28,7 @@ interface ControlPanelProps {
   onSetCustomCell: (index: number, value: 1 | -1) => void;
   onClearCustomPattern: () => void;
   onFillCustomPattern: () => void;
+  onEditPattern: () => void;
   onSubmit: () => void;
 }
 
@@ -65,7 +66,8 @@ export function ControlPanel({
   customPattern, noiseLevel, maskRatio, updateMode, steps, threshold, seed,
   isBusy, onLangChange, onInputModeChange, onPatternChange, onNoiseLevelChange,
   onMaskRatioChange, onUpdateModeChange, onStepsChange, onThresholdChange,
-  onSeedChange, onSetCustomCell, onClearCustomPattern, onFillCustomPattern, onSubmit,
+  onSeedChange, onSetCustomCell, onClearCustomPattern, onFillCustomPattern,
+  onEditPattern, onSubmit,
 }: ControlPanelProps) {
   const corruptionDisabled = isBusy || inputMode === "custom";
 
@@ -107,14 +109,26 @@ export function ControlPanel({
         </div>
 
 
-        <select
-          className="input-base w-auto py-2 text-sm"
-          disabled={isBusy || inputMode === "custom" || patternNames.length === 0}
-          value={selectedPattern}
-          onChange={(e) => onPatternChange(e.target.value)}
-        >
-          {patternNames.map((n) => <option key={n} value={n}>{n}</option>)}
-        </select>
+        <div className="flex flex-col gap-1.5">
+          <select
+            className="input-base w-auto py-2 text-sm"
+            disabled={isBusy || inputMode === "custom" || patternNames.length === 0}
+            value={selectedPattern}
+            onChange={(e) => onPatternChange(e.target.value)}
+          >
+            {patternNames.map((n) => <option key={n} value={n}>{n}</option>)}
+          </select>
+          {inputMode === "stored" && (
+            <button
+              type="button"
+              className="secondary-button py-1.5 text-xs"
+              disabled={isBusy || patternNames.length === 0}
+              onClick={onEditPattern}
+            >
+              {copy.editPattern}
+            </button>
+          )}
+        </div>
 
         <div style={vr} />
 

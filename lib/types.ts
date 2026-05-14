@@ -8,6 +8,7 @@ export interface GalleryResponse {
   defaultPattern: string;
   patternNames: string[];
   patternCount: number;
+  patterns: Record<string, number[]>;
   galleryCaption: string;
   galleryImage: string;
 }
@@ -53,6 +54,7 @@ export interface DashboardCopy {
   inputMode: string;
   storedPattern: string;
   drawCustom: string;
+  editPattern: string;
   pattern: string;
   corruption: string;
   noiseLevel: string;
